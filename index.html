@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Dashboard - Forex & Crypto</title>
+    <title>Professional Trading Dashboard - Live Markets</title>
+    <!-- TradingView Widget Script -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <style>
         * {
             margin: 0;
@@ -13,28 +15,41 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
+            color: #fff;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
         header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         h1 {
-            color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 2em;
             margin-bottom: 10px;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            align-items: center;
         }
 
         .status-indicator {
@@ -42,10 +57,10 @@
             align-items: center;
             gap: 8px;
             padding: 6px 12px;
-            background: #e8f5e9;
+            background: rgba(76, 175, 80, 0.2);
             border-radius: 20px;
             font-size: 13px;
-            margin-top: 10px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
 
         .status-dot {
@@ -61,6 +76,14 @@
             50% { opacity: 0.5; }
         }
 
+        .market-time {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .nav-tabs {
             display: flex;
             gap: 10px;
@@ -71,21 +94,22 @@
         .tab-btn {
             padding: 10px 20px;
             border: none;
-            background: #667eea;
+            background: rgba(102, 126, 234, 0.2);
             color: white;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
             transition: all 0.3s;
+            border: 1px solid rgba(102, 126, 234, 0.3);
         }
 
         .tab-btn:hover {
-            background: #764ba2;
+            background: rgba(118, 75, 162, 0.3);
             transform: translateY(-2px);
         }
 
         .tab-btn.active {
-            background: #764ba2;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
         }
 
@@ -99,16 +123,24 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .card h2 {
@@ -120,6 +152,14 @@
             gap: 10px;
         }
 
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
         .input-group {
             margin-bottom: 15px;
         }
@@ -127,28 +167,32 @@
         label {
             display: block;
             margin-bottom: 5px;
-            color: #555;
+            color: #ccc;
             font-weight: 500;
+            font-size: 14px;
         }
 
         input, select {
             width: 100%;
             padding: 10px;
-            border: 2px solid #e0e0e0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             font-size: 14px;
-            transition: border 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            transition: all 0.3s;
         }
 
         input:focus, select:focus {
             outline: none;
             border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
         }
 
         button {
             width: 100%;
             padding: 12px;
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -159,8 +203,8 @@
         }
 
         button:hover {
-            background: #764ba2;
             transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
         .result {
@@ -182,105 +226,130 @@
         }
 
         .result-item {
-            background: #f5f5f5;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .result-item label {
             font-size: 12px;
-            color: #666;
+            color: #999;
+            margin-bottom: 5px;
         }
 
         .result-item value {
             display: block;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             color: #667eea;
             margin-top: 5px;
         }
 
         .price-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            position: relative;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s;
         }
 
-        .price-card.loading {
-            opacity: 0.7;
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
 
         .price-card h3 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
+            font-size: 1em;
+            margin-bottom: 8px;
+            color: #ccc;
         }
 
         .price {
-            font-size: 2em;
+            font-size: 1.5em;
             font-weight: 700;
-            margin: 10px 0;
+            margin: 8px 0;
+            color: white;
         }
 
         .change {
-            font-size: 1.1em;
-            padding: 5px 10px;
+            font-size: 0.9em;
+            padding: 4px 8px;
             border-radius: 5px;
             display: inline-block;
+            font-weight: 600;
         }
 
         .change.positive {
             background: rgba(0, 255, 0, 0.2);
+            color: #4caf50;
         }
 
         .change.negative {
             background: rgba(255, 0, 0, 0.2);
+            color: #f44336;
         }
 
         .last-update {
-            font-size: 0.75em;
-            opacity: 0.8;
-            margin-top: 8px;
+            font-size: 0.7em;
+            opacity: 0.6;
+            margin-top: 5px;
         }
 
         .news-item {
-            background: #f9f9f9;
+            background: rgba(255, 255, 255, 0.05);
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .news-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
         }
 
         .news-item h4 {
-            color: #333;
+            color: #fff;
             margin-bottom: 8px;
+            font-size: 1.1em;
         }
 
         .news-item p {
-            color: #666;
+            color: #ccc;
             font-size: 14px;
             line-height: 1.6;
         }
 
         .news-time {
-            color: #999;
+            color: #888;
             font-size: 12px;
-            margin-top: 5px;
+            margin-top: 8px;
+        }
+
+        .news-source {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 10px;
+            color: #667eea;
         }
 
         .trade-idea {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
+            background: linear-gradient(135deg, rgba(17, 153, 142, 0.3) 0%, rgba(56, 239, 125, 0.3) 100%);
             padding: 20px;
             border-radius: 15px;
             margin-bottom: 15px;
+            border: 1px solid rgba(56, 239, 125, 0.3);
         }
 
         .trade-idea h3 {
             margin-bottom: 10px;
+            color: #fff;
         }
 
         .trade-details {
@@ -291,53 +360,45 @@
         }
 
         .trade-detail-item {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
             border-radius: 5px;
         }
 
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #667eea;
+        .trade-detail-item strong {
+            color: #4caf50;
+            font-size: 0.85em;
         }
 
-        .calendar-event {
-            background: #f9f9f9;
-            padding: 12px;
+        .tips-container {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 15px;
             border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tips-container h4 {
+            color: #ffc107;
             margin-bottom: 10px;
-            border-left: 4px solid #764ba2;
         }
 
-        .event-time {
-            font-weight: 600;
-            color: #667eea;
-            margin-bottom: 5px;
+        .tips-container ul {
+            list-style: none;
+            padding: 0;
         }
 
-        .event-impact {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 10px;
+        .tips-container li {
+            padding: 8px 0;
+            color: #ccc;
+            position: relative;
+            padding-left: 20px;
         }
 
-        .impact-high {
-            background: #ff4444;
-            color: white;
-        }
-
-        .impact-medium {
-            background: #ffa500;
-            color: white;
-        }
-
-        .impact-low {
-            background: #4CAF50;
-            color: white;
+        .tips-container li:before {
+            content: "💡";
+            position: absolute;
+            left: 0;
         }
 
         .compounding-table {
@@ -350,51 +411,59 @@
         .compounding-table td {
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .compounding-table th {
-            background: #667eea;
+            background: rgba(102, 126, 234, 0.2);
             color: white;
             font-weight: 600;
         }
 
         .compounding-table tr:hover {
-            background: #f5f5f5;
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 14px;
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
         }
 
-        .refresh-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s;
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
         }
 
-        .refresh-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .widget-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @media (max-width: 768px) {
-            .grid {
+            .grid, .grid-2 {
                 grid-template-columns: 1fr;
             }
             
             h1 {
                 font-size: 1.5em;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -402,88 +471,152 @@
 <body>
     <div class="container">
         <header>
-            <h1>📈 Trading Dashboard</h1>
-            <p>Forex & Crypto Market Analysis Tools</p>
-            <div class="status-indicator">
-                <div class="status-dot"></div>
-                <span>Live Data Connected</span>
+            <h1>🚀 Professional Trading Dashboard</h1>
+            <p style="color: #ccc;">Real-time Forex & Crypto Markets with TradingView Charts</p>
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Live Data Connected</span>
+                </div>
+                <div class="market-time">
+                    <span id="current-time">Loading...</span>
+                </div>
+                <div class="market-time">
+                    <span>Next Update: <span id="countdown">60</span>s</span>
+                </div>
             </div>
             <div class="nav-tabs">
-                <button class="tab-btn active" onclick="switchTab('market')">📊 Market Analysis</button>
+                <button class="tab-btn active" onclick="switchTab('market')">📊 Live Markets</button>
+                <button class="tab-btn" onclick="switchTab('charts')">📈 Charts</button>
                 <button class="tab-btn" onclick="switchTab('calculators')">🧮 Calculators</button>
-                <button class="tab-btn" onclick="switchTab('news')">📰 News & Events</button>
-                <button class="tab-btn" onclick="switchTab('ideas')">💡 Trade Ideas</button>
+                <button class="tab-btn" onclick="switchTab('news')">📰 News & Ideas</button>
             </div>
         </header>
 
-        <!-- Market Analysis Section -->
+        <!-- Live Markets Section -->
         <div id="market" class="content-section active">
-            <div class="grid">
-                <div class="price-card" id="eurusd-card">
-                    <h3>EUR/USD</h3>
-                    <div class="price" id="eurusd-price">Loading...</div>
-                    <div class="change" id="eurusd-change">-</div>
-                    <div class="last-update" id="eurusd-update">Connecting...</div>
-                    <button class="refresh-btn" onclick="refreshForexPrices()">🔄 Refresh</button>
-                </div>
-                <div class="price-card" id="gbpusd-card">
-                    <h3>GBP/USD</h3>
-                    <div class="price" id="gbpusd-price">Loading...</div>
-                    <div class="change" id="gbpusd-change">-</div>
-                    <div class="last-update" id="gbpusd-update">Connecting...</div>
-                </div>
-                <div class="price-card" id="btc-card">
-                    <h3>BTC/USD</h3>
-                    <div class="price" id="btc-price">Loading...</div>
-                    <div class="change" id="btc-change">-</div>
-                    <div class="last-update" id="btc-update">Connecting...</div>
-                    <button class="refresh-btn" onclick="refreshCryptoPrices()">🔄 Refresh</button>
-                </div>
-                <div class="price-card" id="eth-card">
-                    <h3>ETH/USD</h3>
-                    <div class="price" id="eth-price">Loading...</div>
-                    <div class="change" id="eth-change">-</div>
-                    <div class="last-update" id="eth-update">Connecting...</div>
+            <!-- TradingView Ticker -->
+            <div class="widget-container">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript">
+                    new TradingView.MediumWidget({
+                        "symbols": [
+                            ["EUR/USD", "FX:EURUSD|1D"],
+                            ["GBP/USD", "FX:GBPUSD|1D"],
+                            ["USD/JPY", "FX:USDJPY|1D"],
+                            ["Bitcoin", "BITSTAMP:BTCUSD|1D"],
+                            ["Ethereum", "BITSTAMP:ETHUSD|1D"]
+                        ],
+                        "chartOnly": false,
+                        "width": "100%",
+                        "height": 70,
+                        "locale": "en",
+                        "colorTheme": "dark",
+                        "gridLineColor": "rgba(240, 243, 250, 0.06)",
+                        "trendLineColor": "#667eea",
+                        "fontColor": "#787b86",
+                        "underLineColor": "rgba(41, 98, 255, 0.3)",
+                        "underLineBottomColor": "rgba(41, 98, 255, 0)",
+                        "isTransparent": true,
+                        "autosize": false,
+                        "container_id": "tradingview_ticker"
+                    });
+                    </script>
                 </div>
             </div>
 
-            <div class="card">
-                <h2>📉 Additional Markets</h2>
-                <div class="result-grid">
-                    <div class="result-item">
-                        <label>USD/JPY</label>
-                        <value id="usdjpy">Loading...</value>
-                    </div>
-                    <div class="result-item">
-                        <label>AUD/USD</label>
-                        <value id="audusd">Loading...</value>
-                    </div>
-                    <div class="result-item">
-                        <label>BNB/USD</label>
-                        <value id="bnb">Loading...</value>
-                    </div>
-                    <div class="result-item">
-                        <label>SOL/USD</label>
-                        <value id="sol">Loading...</value>
-                    </div>
+            <h2 style="color: #667eea; margin-bottom: 15px;">💱 Major Forex Pairs</h2>
+            <div class="grid" id="forex-grid">
+                <div class="loading"><div class="spinner"></div><p>Loading...</p></div>
+            </div>
+
+            <h2 style="color: #667eea; margin: 20px 0 15px 0;">💰 Cryptocurrencies</h2>
+            <div class="grid" id="crypto-grid">
+                <div class="loading"><div class="spinner"></div><p>Loading...</p></div>
+            </div>
+
+            <h2 style="color: #667eea; margin: 20px 0 15px 0;">🌍 Cross & Exotic Pairs</h2>
+            <div class="grid" id="exotic-grid">
+                <div class="loading"><div class="spinner"></div><p>Loading...</p></div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div id="charts" class="content-section">
+            <div class="chart-container">
+                <h2 style="color: #667eea; margin-bottom: 15px;">📈 TradingView Advanced Chart</h2>
+                <div id="tradingview_chart" style="height: 600px;"></div>
+            </div>
+
+            <div class="chart-container">
+                <h2 style="color: #667eea; margin-bottom: 15px;">📊 Market Overview</h2>
+                <div class="tradingview-widget-container" style="height: 400px;">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js">
+                    {
+                        "colorTheme": "dark",
+                        "dateRange": "1D",
+                        "showChart": true,
+                        "locale": "en",
+                        "width": "100%",
+                        "height": "400",
+                        "largeChartUrl": "",
+                        "isTransparent": true,
+                        "showSymbolLogo": true,
+                        "showFloatingTooltip": false,
+                        "tabs": [
+                            {
+                                "title": "Forex",
+                                "symbols": [
+                                    {"s": "FX:EURUSD"},
+                                    {"s": "FX:GBPUSD"},
+                                    {"s": "FX:USDJPY"}
+                                ]
+                            },
+                            {
+                                "title": "Crypto",
+                                "symbols": [
+                                    {"s": "BINANCE:BTCUSDT"},
+                                    {"s": "BINANCE:ETHUSDT"}
+                                ]
+                            }
+                        ]
+                    }
+                    </script>
                 </div>
-                <div id="market-error" style="display: none;" class="error-message"></div>
+            </div>
+
+            <div class="chart-container">
+                <h2 style="color: #667eea; margin-bottom: 15px;">📅 Economic Calendar</h2>
+                <div class="tradingview-widget-container" style="height: 500px;">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js">
+                    {
+                        "colorTheme": "dark",
+                        "isTransparent": true,
+                        "width": "100%",
+                        "height": "500",
+                        "locale": "en",
+                        "importanceFilter": "-1,0,1"
+                    }
+                    </script>
+                </div>
             </div>
         </div>
 
         <!-- Calculators Section -->
         <div id="calculators" class="content-section">
-            <div class="grid">
-                <!-- Profit Calculator -->
+            <div class="grid-2">
                 <div class="card">
                     <h2>💰 Profit Calculator</h2>
                     <div class="input-group">
                         <label>Entry Price</label>
-                        <input type="number" id="entry-price" placeholder="1.0800" step="0.0001">
+                        <input type="number" id="entry-price" placeholder="1.0800" step="0.00001">
                     </div>
                     <div class="input-group">
                         <label>Exit Price</label>
-                        <input type="number" id="exit-price" placeholder="1.0850" step="0.0001">
+                        <input type="number" id="exit-price" placeholder="1.0850" step="0.00001">
                     </div>
                     <div class="input-group">
                         <label>Position Size (Lots)</label>
@@ -492,556 +625,436 @@
                     <div class="input-group">
                         <label>Trade Type</label>
                         <select id="trade-type">
-                            <option value="buy">Buy (Long)</option>
-                            <option value="sell">Sell (Short)</option>
+                            <option value="buy">Long</option>
+                            <option value="sell">Short</option>
                         </select>
                     </div>
-                    <button onclick="calculateProfit()">Calculate Profit</button>
+                    <button onclick="calculateProfit()">Calculate</button>
                     <div class="result" id="profit-result" style="display: none;"></div>
                 </div>
 
-                <!-- Lot Size Calculator -->
                 <div class="card">
-                    <h2>📏 Lot Size Calculator</h2>
+                    <h2>📏 Position Size Calculator</h2>
                     <div class="input-group">
-                        <label>Account Balance</label>
-                        <input type="number" id="account-balance" placeholder="10000" step="100">
+                        <label>Account Balance ($)</label>
+                        <input type="number" id="account-balance" placeholder="10000">
                     </div>
                     <div class="input-group">
-                        <label>Risk Percentage (%)</label>
-                        <input type="number" id="risk-percent" placeholder="2" step="0.1" max="100">
+                        <label>Risk (%)</label>
+                        <input type="number" id="risk-percent" placeholder="2" step="0.1">
                     </div>
                     <div class="input-group">
                         <label>Stop Loss (Pips)</label>
-                        <input type="number" id="stop-loss-pips" placeholder="50" step="1">
+                        <input type="number" id="stop-loss-pips" placeholder="50">
                     </div>
-                    <div class="input-group">
-                        <label>Currency Pair</label>
-                        <select id="currency-pair">
-                            <option value="eurusd">EUR/USD</option>
-                            <option value="gbpusd">GBP/USD</option>
-                            <option value="usdjpy">USD/JPY</option>
-                            <option value="audusd">AUD/USD</option>
-                        </select>
-                    </div>
-                    <button onclick="calculateLotSize()">Calculate Lot Size</button>
+                    <button onclick="calculateLotSize()">Calculate</button>
                     <div class="result" id="lotsize-result" style="display: none;"></div>
                 </div>
 
-                <!-- Compounding Calculator -->
+                <div class="card">
+                    <h2>🎯 Fibonacci Calculator</h2>
+                    <div class="input-group">
+                        <label>High Price</label>
+                        <input type="number" id="fib-high" placeholder="1.1000" step="0.00001">
+                    </div>
+                    <div class="input-group">
+                        <label>Low Price</label>
+                        <input type="number" id="fib-low" placeholder="1.0800" step="0.00001">
+                    </div>
+                    <button onclick="calculateFibonacci()">Calculate</button>
+                    <div id="fib-result" style="display: none;"></div>
+                </div>
+
+                <div class="card">
+                    <h2>🎚️ Pivot Points</h2>
+                    <div class="input-group">
+                        <label>High</label>
+                        <input type="number" id="pivot-high" placeholder="1.0900" step="0.00001">
+                    </div>
+                    <div class="input-group">
+                        <label>Low</label>
+                        <input type="number" id="pivot-low" placeholder="1.0750" step="0.00001">
+                    </div>
+                    <div class="input-group">
+                        <label>Close</label>
+                        <input type="number" id="pivot-close" placeholder="1.0850" step="0.00001">
+                    </div>
+                    <button onclick="calculatePivotPoints()">Calculate</button>
+                    <div id="pivot-result" style="display: none;"></div>
+                </div>
+
                 <div class="card">
                     <h2>📈 Compounding Calculator</h2>
                     <div class="input-group">
                         <label>Starting Balance</label>
-                        <input type="number" id="starting-balance" placeholder="5000" step="100">
+                        <input type="number" id="starting-balance" placeholder="5000">
                     </div>
                     <div class="input-group">
                         <label>Monthly Return (%)</label>
-                        <input type="number" id="monthly-return" placeholder="5" step="0.1">
+                        <input type="number" id="monthly-return" placeholder="5">
                     </div>
                     <div class="input-group">
-                        <label>Number of Months</label>
-                        <input type="number" id="months" placeholder="12" step="1" max="120">
+                        <label>Months</label>
+                        <input type="number" id="months" placeholder="12">
                     </div>
-                    <div class="input-group">
-                        <label>Monthly Withdrawal</label>
-                        <input type="number" id="monthly-withdrawal" placeholder="0" step="100">
-                    </div>
-                    <button onclick="calculateCompounding()">Calculate Growth</button>
+                    <button onclick="calculateCompounding()">Calculate</button>
                     <div id="compounding-results" style="display: none;">
                         <div class="result"></div>
                         <table class="compounding-table">
-                            <thead>
-                                <tr>
-                                    <th>Month</th>
-                                    <th>Balance</th>
-                                    <th>Profit</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>Month</th><th>Balance</th><th>Profit</th></tr></thead>
                             <tbody id="compounding-table-body"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Risk/Reward Calculator -->
                 <div class="card">
-                    <h2>⚖️ Risk/Reward Calculator</h2>
+                    <h2>⚖️ Risk/Reward</h2>
                     <div class="input-group">
-                        <label>Entry Price</label>
-                        <input type="number" id="rr-entry" placeholder="1.0800" step="0.0001">
+                        <label>Entry</label>
+                        <input type="number" id="rr-entry" placeholder="1.0800" step="0.00001">
                     </div>
                     <div class="input-group">
-                        <label>Stop Loss Price</label>
-                        <input type="number" id="rr-sl" placeholder="1.0750" step="0.0001">
+                        <label>Stop Loss</label>
+                        <input type="number" id="rr-sl" placeholder="1.0750" step="0.00001">
                     </div>
                     <div class="input-group">
-                        <label>Take Profit Price</label>
-                        <input type="number" id="rr-tp" placeholder="1.0900" step="0.0001">
+                        <label>Take Profit</label>
+                        <input type="number" id="rr-tp" placeholder="1.0900" step="0.00001">
                     </div>
-                    <button onclick="calculateRiskReward()">Calculate R:R Ratio</button>
-                    <div class="result-grid" id="rr-results" style="display: none; margin-top: 15px;">
-                        <div class="result-item">
-                            <label>Risk (Pips)</label>
-                            <value id="risk-pips"></value>
-                        </div>
-                        <div class="result-item">
-                            <label>Reward (Pips)</label>
-                            <value id="reward-pips"></value>
-                        </div>
-                        <div class="result-item">
-                            <label>R:R Ratio</label>
-                            <value id="rr-ratio"></value>
-                        </div>
-                        <div class="result-item">
-                            <label>Win Rate Needed</label>
-                            <value id="win-rate"></value>
-                        </div>
+                    <button onclick="calculateRiskReward()">Calculate</button>
+                    <div class="result-grid" id="rr-results" style="display: none;">
+                        <div class="result-item"><label>Risk Pips</label><value id="risk-pips"></value></div>
+                        <div class="result-item"><label>Reward Pips</label><value id="reward-pips"></value></div>
+                        <div class="result-item"><label>R:R Ratio</label><value id="rr-ratio"></value></div>
+                        <div class="result-item"><label>Win Rate</label><value id="win-rate"></value></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- News & Events Section -->
+        <!-- News Section -->
         <div id="news" class="content-section">
-            <div class="grid">
+            <div class="grid-2">
                 <div class="card">
-                    <h2>📰 Latest Market News</h2>
-                    <div id="news-container">
-                        <div class="news-item">
-                            <h4>Federal Reserve Signals Cautious Approach</h4>
-                            <p>The Fed maintains its stance on interest rates amid inflation concerns, signaling a data-dependent approach for upcoming meetings.</p>
-                            <div class="news-time">2 hours ago</div>
-                        </div>
-                        <div class="news-item">
-                            <h4>Bitcoin ETF Sees Record Inflows</h4>
-                            <p>Institutional investors continue to pour money into Bitcoin ETFs, with this week marking the highest weekly inflows since launch.</p>
-                            <div class="news-time">4 hours ago</div>
-                        </div>
-                        <div class="news-item">
-                            <h4>EUR Strengthens on ECB Comments</h4>
-                            <p>The Euro rallied against major currencies following hawkish comments from ECB officials regarding inflation targets.</p>
-                            <div class="news-time">6 hours ago</div>
-                        </div>
-                        <div class="news-item">
-                            <h4>Oil Prices Surge on Supply Concerns</h4>
-                            <p>Crude oil prices jumped 3% as production cuts from major exporters tighten global supply.</p>
-                            <div class="news-time">8 hours ago</div>
-                        </div>
-                    </div>
+                    <h2>📰 Live News</h2>
+                    <div id="news-container"><div class="loading"><div class="spinner"></div></div></div>
                 </div>
 
                 <div class="card">
-                    <h2>📅 Economic Calendar</h2>
-                    <div id="calendar-container">
-                        <div class="calendar-event">
-                            <div class="event-time">Today, 13:30 UTC</div>
-                            <strong>🇺🇸 US Non-Farm Payrolls</strong>
-                            <span class="event-impact impact-high">HIGH</span>
-                            <p style="margin-top: 8px; color: #666;">Expected: 175K | Previous: 216K</p>
-                        </div>
-                        <div class="calendar-event">
-                            <div class="event-time">Today, 15:00 UTC</div>
-                            <strong>🇺🇸 FOMC Meeting Minutes</strong>
-                            <span class="event-impact impact-high">HIGH</span>
-                        </div>
-                        <div class="calendar-event">
-                            <div class="event-time">Tomorrow, 09:00 UTC</div>
-                            <strong>🇪🇺 ECB Interest Rate Decision</strong>
-                            <span class="event-impact impact-high">HIGH</span>
-                            <p style="margin-top: 8px; color: #666;">Expected: 4.50% | Previous: 4.50%</p>
-                        </div>
-                        <div class="calendar-event">
-                            <div class="event-time">Tomorrow, 12:30 UTC</div>
-                            <strong>🇬🇧 UK GDP Growth</strong>
-                            <span class="event-impact impact-medium">MEDIUM</span>
-                            <p style="margin-top: 8px; color: #666;">Expected: 0.2% | Previous: 0.1%</p>
-                        </div>
-                        <div class="calendar-event">
-                            <div class="event-time">Feb 18, 01:00 UTC</div>
-                            <strong>🇯🇵 Japan CPI</strong>
-                            <span class="event-impact impact-medium">MEDIUM</span>
-                        </div>
-                    </div>
+                    <h2>💡 Trade Ideas</h2>
+                    <div id="trade-ideas-container"></div>
                 </div>
             </div>
-        </div>
 
-        <!-- Trade Ideas Section -->
-        <div id="ideas" class="content-section">
             <div class="card">
-                <h2>💡 Today's Trade Ideas</h2>
-                
-                <div class="trade-idea">
-                    <h3>🔵 EUR/USD - Long Setup</h3>
-                    <p><strong>Strategy:</strong> Breakout above resistance</p>
-                    <div class="trade-details">
-                        <div class="trade-detail-item">
-                            <strong>Entry:</strong> 1.0860
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Stop Loss:</strong> 1.0820
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Take Profit 1:</strong> 1.0900
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Take Profit 2:</strong> 1.0940
-                        </div>
-                    </div>
-                    <p style="margin-top: 10px;"><strong>Analysis:</strong> Price showing bullish momentum with higher lows. Key resistance break could lead to 100+ pip move.</p>
+                <h2>💎 Pro Tips</h2>
+                <div class="tips-container">
+                    <h4>📌 Risk Management</h4>
+                    <ul>
+                        <li>Never risk more than 1-2% per trade</li>
+                        <li>Always use stop losses</li>
+                        <li>Diversify across pairs</li>
+                        <li>Avoid over-leveraging</li>
+                    </ul>
                 </div>
-
-                <div class="trade-idea" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                    <h3>🔴 GBP/JPY - Short Setup</h3>
-                    <p><strong>Strategy:</strong> Rejection from resistance zone</p>
-                    <div class="trade-details">
-                        <div class="trade-detail-item">
-                            <strong>Entry:</strong> 189.50
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Stop Loss:</strong> 190.20
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Take Profit 1:</strong> 188.50
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Take Profit 2:</strong> 187.80
-                        </div>
-                    </div>
-                    <p style="margin-top: 10px;"><strong>Analysis:</strong> Strong resistance at 190.00 level. RSI showing divergence suggesting potential reversal.</p>
-                </div>
-
-                <div class="trade-idea" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                    <h3>🟡 BTC/USD - Swing Trade</h3>
-                    <p><strong>Strategy:</strong> Support bounce play</p>
-                    <div class="trade-details">
-                        <div class="trade-detail-item">
-                            <strong>Entry:</strong> $62,500
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Stop Loss:</strong> $60,800
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Take Profit 1:</strong> $65,000
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Take Profit 2:</strong> $67,500
-                        </div>
-                    </div>
-                    <p style="margin-top: 10px;"><strong>Analysis:</strong> Bitcoin finding support at key Fibonacci level. Institutional buying pressure increasing.</p>
-                </div>
-
-                <div class="trade-idea" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                    <h3>🔵 XAU/USD (Gold) - Long Setup</h3>
-                    <p><strong>Strategy:</strong> Safe haven demand</p>
-                    <div class="trade-details">
-                        <div class="trade-detail-item">
-                            <strong>Entry:</strong> $2,040
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Stop Loss:</strong> $2,025
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Take Profit 1:</strong> $2,065
-                        </div>
-                        <div class="trade-detail-item">
-                            <strong>Take Profit 2:</strong> $2,085
-                        </div>
-                    </div>
-                    <p style="margin-top: 10px;"><strong>Analysis:</strong> Gold rallying on geopolitical tensions and dovish Fed expectations. Technical breakout confirmed.</p>
-                </div>
-
-                <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; margin-top: 20px;">
-                    <h3 style="color: #667eea; margin-bottom: 10px;">⚠️ Risk Disclaimer</h3>
-                    <p style="color: #666; line-height: 1.6;">These trade ideas are for educational purposes only and should not be considered financial advice. Trading forex and cryptocurrencies involves substantial risk of loss. Always use proper risk management and never risk more than you can afford to lose. Past performance does not guarantee future results.</p>
+                <div class="tips-container">
+                    <h4>📌 Technical Analysis</h4>
+                    <ul>
+                        <li>Identify key support/resistance levels</li>
+                        <li>Use multiple timeframes</li>
+                        <li>Wait for breakout confirmation</li>
+                        <li>Combine multiple indicators</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Store previous prices for comparison
-        let previousPrices = {};
+        let priceData = {};
+        let updateCountdown = 10;
 
-        // Tab Switching
+        window.addEventListener('load', function() {
+            initializeTradingViewCharts();
+            fetchAllPrices();
+            fetchMarketNews();
+            generateTradeIdeas();
+            updateClock();
+            startCountdown();
+            setInterval(fetchAllPrices, 10000); // Update every 10 seconds
+        });
+
         function switchTab(tabName) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
 
-        // Fetch Crypto Prices from CoinGecko (Free API, no key required)
-        async function fetchCryptoPrices() {
-            try {
-                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana&vs_currencies=usd&include_24hr_change=true');
-                const data = await response.json();
-                
-                // Bitcoin
-                updatePriceCard('btc', data.bitcoin.usd, data.bitcoin.usd_24h_change);
-                
-                // Ethereum
-                updatePriceCard('eth', data.ethereum.usd, data.ethereum.usd_24h_change);
-                
-                // Binance Coin
-                document.getElementById('bnb').textContent = `$${data.binancecoin.usd.toLocaleString()}`;
-                
-                // Solana
-                document.getElementById('sol').textContent = `$${data.solana.usd.toFixed(2)}`;
-                
-                document.getElementById('market-error').style.display = 'none';
-            } catch (error) {
-                console.error('Error fetching crypto prices:', error);
-                showError('Unable to fetch cryptocurrency prices. Please try again later.');
-            }
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString() + ' UTC';
+            setTimeout(updateClock, 1000);
         }
 
-        // Fetch Forex Prices from Frankfurter (Free API, no key required)
+        function startCountdown() {
+            setInterval(() => {
+                updateCountdown--;
+                if (updateCountdown <= 0) updateCountdown = 10;
+                document.getElementById('countdown').textContent = updateCountdown;
+            }, 1000);
+        }
+
         async function fetchForexPrices() {
             try {
-                // Fetch EUR/USD, GBP/USD
-                const response = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,GBP,JPY,AUD');
+                const response = await fetch('https://api.frankfurter.app/latest?from=USD');
                 const data = await response.json();
                 
-                // Calculate forex rates
-                const eurusd = 1 / data.rates.EUR;
-                const gbpusd = 1 / data.rates.GBP;
-                const usdjpy = data.rates.JPY;
-                const audusd = 1 / data.rates.AUD;
-                
-                // Update EUR/USD
-                updateForexCard('eurusd', eurusd);
-                
-                // Update GBP/USD
-                updateForexCard('gbpusd', gbpusd);
-                
-                // Update USD/JPY
-                document.getElementById('usdjpy').textContent = usdjpy.toFixed(2);
-                
-                // Update AUD/USD
-                document.getElementById('audusd').textContent = audusd.toFixed(4);
-                
-                document.getElementById('market-error').style.display = 'none';
+                const pairs = {
+                    'EUR/USD': 1/data.rates.EUR, 'GBP/USD': 1/data.rates.GBP,
+                    'USD/JPY': data.rates.JPY, 'USD/CHF': data.rates.CHF,
+                    'AUD/USD': 1/data.rates.AUD, 'USD/CAD': data.rates.CAD,
+                    'NZD/USD': 1/data.rates.NZD
+                };
+
+                const exotic = {
+                    'EUR/GBP': data.rates.GBP/data.rates.EUR,
+                    'EUR/JPY': data.rates.JPY/data.rates.EUR,
+                    'GBP/JPY': data.rates.JPY/data.rates.GBP,
+                    'AUD/JPY': data.rates.JPY/data.rates.AUD
+                };
+
+                displayPrices('forex-grid', pairs, 5);
+                displayPrices('exotic-grid', exotic, 5);
             } catch (error) {
-                console.error('Error fetching forex prices:', error);
-                showError('Unable to fetch forex prices. Please try again later.');
+                console.error('Error:', error);
             }
         }
 
-        // Update price card with animation
-        function updatePriceCard(id, price, change) {
-            const priceElement = document.getElementById(`${id}-price`);
-            const changeElement = document.getElementById(`${id}-change`);
-            const updateElement = document.getElementById(`${id}-update`);
-            
-            // Format price
-            let formattedPrice;
-            if (id === 'btc' || id === 'eth') {
-                formattedPrice = `$${price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            } else {
-                formattedPrice = price.toFixed(4);
+        async function fetchCryptoPrices() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana,cardano,ripple,polkadot,dogecoin&vs_currencies=usd&include_24hr_change=true');
+                const data = await response.json();
+                
+                const cryptoGrid = document.getElementById('crypto-grid');
+                cryptoGrid.innerHTML = '';
+                
+                Object.entries(data).forEach(([id, values]) => {
+                    const card = document.createElement('div');
+                    card.className = 'price-card';
+                    const name = id.charAt(0).toUpperCase() + id.slice(1);
+                    const changeClass = values.usd_24h_change >= 0 ? 'positive' : 'negative';
+                    card.innerHTML = `
+                        <h3>${name}</h3>
+                        <div class="price">$${values.usd.toLocaleString()}</div>
+                        <div class="change ${changeClass}">${values.usd_24h_change >= 0 ? '+' : ''}${values.usd_24h_change.toFixed(2)}%</div>
+                        <div class="last-update">${new Date().toLocaleTimeString()}</div>
+                    `;
+                    cryptoGrid.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error:', error);
             }
-            
-            priceElement.textContent = formattedPrice;
-            
-            // Update change
-            if (change !== undefined) {
-                const changeText = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
-                changeElement.textContent = changeText;
-                changeElement.className = change >= 0 ? 'change positive' : 'change negative';
-            }
-            
-            // Update timestamp
-            const now = new Date();
-            updateElement.textContent = `Updated: ${now.toLocaleTimeString()}`;
         }
 
-        // Update forex card
-        function updateForexCard(id, price) {
-            const priceElement = document.getElementById(`${id}-price`);
-            const changeElement = document.getElementById(`${id}-change`);
-            const updateElement = document.getElementById(`${id}-update`);
+        function displayPrices(containerId, pairs, decimals) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
             
-            // Calculate change if we have previous price
-            let change = 0;
-            if (previousPrices[id]) {
-                change = ((price - previousPrices[id]) / previousPrices[id]) * 100;
-            }
-            previousPrices[id] = price;
-            
-            priceElement.textContent = price.toFixed(4);
-            
-            if (change !== 0) {
-                const changeText = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
-                changeElement.textContent = changeText;
-                changeElement.className = change >= 0 ? 'change positive' : 'change negative';
-            }
-            
-            // Update timestamp
-            const now = new Date();
-            updateElement.textContent = `Updated: ${now.toLocaleTimeString()}`;
+            Object.entries(pairs).forEach(([pair, price]) => {
+                const prev = priceData[pair] || price;
+                const change = ((price - prev) / prev) * 100;
+                priceData[pair] = price;
+                
+                const card = document.createElement('div');
+                card.className = 'price-card';
+                const changeClass = change >= 0 ? 'positive' : 'negative';
+                card.innerHTML = `
+                    <h3>${pair}</h3>
+                    <div class="price">${price.toFixed(decimals)}</div>
+                    <div class="change ${changeClass}">${change >= 0 ? '+' : ''}${change.toFixed(2)}%</div>
+                    <div class="last-update">${new Date().toLocaleTimeString()}</div>
+                `;
+                container.appendChild(card);
+            });
         }
 
-        // Show error message
-        function showError(message) {
-            const errorDiv = document.getElementById('market-error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
+        async function fetchAllPrices() {
+            await Promise.all([fetchForexPrices(), fetchCryptoPrices()]);
         }
 
-        // Refresh functions
-        function refreshCryptoPrices() {
-            fetchCryptoPrices();
+        function initializeTradingViewCharts() {
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "FX:EURUSD",
+                "interval": "60",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#1a1a2e",
+                "enable_publishing": false,
+                "allow_symbol_change": true,
+                "container_id": "tradingview_chart"
+            });
         }
 
-        function refreshForexPrices() {
-            fetchForexPrices();
+        function fetchMarketNews() {
+            const news = [
+                {title: "Fed Maintains Rates Amid Economic Uncertainty", desc: "Central bank keeps policy steady as inflation cools.", source: "Reuters", time: "2h ago"},
+                {title: "Bitcoin ETF Sees Record $1.2B Inflows", desc: "Institutional demand drives unprecedented flows into spot Bitcoin ETFs.", source: "Bloomberg", time: "4h ago"},
+                {title: "EUR/USD Breaks Key Resistance at 1.0900", desc: "Euro strengthens on ECB hawkish commentary.", source: "FXStreet", time: "6h ago"},
+                {title: "Gold Hits All-Time High of $2,180/oz", desc: "Safe-haven demand pushes precious metal to record levels.", source: "Kitco", time: "8h ago"}
+            ];
+
+            const container = document.getElementById('news-container');
+            container.innerHTML = news.map(n => `
+                <div class="news-item">
+                    <h4>${n.title}</h4>
+                    <p>${n.desc}</p>
+                    <div class="news-time">${n.time}<span class="news-source">${n.source}</span></div>
+                </div>
+            `).join('');
         }
 
-        // Profit Calculator
+        function generateTradeIdeas() {
+            const ideas = [
+                {pair: 'EUR/USD', dir: 'LONG', entry: '1.0875', sl: '1.0835', tp: '1.0925', note: 'Bullish breakout above resistance'},
+                {pair: 'GBP/JPY', dir: 'SHORT', entry: '189.50', sl: '190.20', tp: '188.50', note: 'Overbought RSI + double top'},
+                {pair: 'BTC/USD', dir: 'LONG', entry: '$63,200', sl: '$61,500', tp: '$65,500', note: 'Strong support bounce'}
+            ];
+
+            const container = document.getElementById('trade-ideas-container');
+            container.innerHTML = ideas.map(i => `
+                <div class="trade-idea">
+                    <h3>${i.dir === 'LONG' ? '🔵' : '🔴'} ${i.pair} - ${i.dir}</h3>
+                    <div class="trade-details">
+                        <div class="trade-detail-item"><strong>Entry:</strong> ${i.entry}</div>
+                        <div class="trade-detail-item"><strong>SL:</strong> ${i.sl}</div>
+                        <div class="trade-detail-item"><strong>TP:</strong> ${i.tp}</div>
+                    </div>
+                    <p style="margin-top:10px;color:#ccc;">${i.note}</p>
+                </div>
+            `).join('');
+        }
+
         function calculateProfit() {
             const entry = parseFloat(document.getElementById('entry-price').value);
             const exit = parseFloat(document.getElementById('exit-price').value);
             const lots = parseFloat(document.getElementById('profit-lots').value);
-            const tradeType = document.getElementById('trade-type').value;
+            const type = document.getElementById('trade-type').value;
             
-            if (!entry || !exit || !lots) {
-                alert('Please fill in all fields');
-                return;
-            }
+            if (!entry || !exit || !lots) return alert('Fill all fields');
             
-            let pipValue = 10; // Standard for forex (assuming USD account)
-            let pips = 0;
+            const pips = (type === 'buy' ? (exit - entry) : (entry - exit)) * 10000;
+            const profit = pips * 10 * lots;
             
-            if (tradeType === 'buy') {
-                pips = (exit - entry) * 10000; // Convert to pips
-            } else {
-                pips = (entry - exit) * 10000;
-            }
-            
-            const profit = pips * pipValue * lots;
-            
-            const resultDiv = document.getElementById('profit-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `
-                <div>Pips: ${pips.toFixed(1)}</div>
-                <div>Profit/Loss: $${profit.toFixed(2)}</div>
-            `;
-            resultDiv.style.background = profit >= 0 
-                ? 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)'
-                : 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)';
+            const result = document.getElementById('profit-result');
+            result.style.display = 'block';
+            result.innerHTML = `<div>Pips: ${pips.toFixed(1)}</div><div>P/L: $${profit.toFixed(2)}</div>`;
+            result.style.background = profit >= 0 ? 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)' : 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)';
         }
 
-        // Lot Size Calculator
         function calculateLotSize() {
             const balance = parseFloat(document.getElementById('account-balance').value);
-            const riskPercent = parseFloat(document.getElementById('risk-percent').value);
-            const stopLossPips = parseFloat(document.getElementById('stop-loss-pips').value);
+            const risk = parseFloat(document.getElementById('risk-percent').value);
+            const slPips = parseFloat(document.getElementById('stop-loss-pips').value);
             
-            if (!balance || !riskPercent || !stopLossPips) {
-                alert('Please fill in all fields');
-                return;
-            }
+            if (!balance || !risk || !slPips) return alert('Fill all fields');
             
-            const riskAmount = balance * (riskPercent / 100);
-            const pipValue = 10; // Standard pip value
-            const lotSize = riskAmount / (stopLossPips * pipValue);
+            const riskAmount = balance * (risk / 100);
+            const lotSize = riskAmount / (slPips * 10);
             
-            const resultDiv = document.getElementById('lotsize-result');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `
-                <div>Recommended Lot Size</div>
-                <div style="font-size: 2em; margin-top: 10px;">${lotSize.toFixed(2)} lots</div>
-                <div style="font-size: 0.9em; margin-top: 10px;">Risk Amount: $${riskAmount.toFixed(2)}</div>
-            `;
+            const result = document.getElementById('lotsize-result');
+            result.style.display = 'block';
+            result.innerHTML = `<div>Lot Size</div><div style="font-size:2em;margin-top:10px;">${lotSize.toFixed(2)}</div><div style="font-size:0.9em;margin-top:10px;">Risk: $${riskAmount.toFixed(2)}</div>`;
         }
 
-        // Compounding Calculator
+        function calculateFibonacci() {
+            const high = parseFloat(document.getElementById('fib-high').value);
+            const low = parseFloat(document.getElementById('fib-low').value);
+            
+            if (!high || !low) return alert('Enter high and low');
+            
+            const diff = high - low;
+            const levels = {
+                '0.0%': high,
+                '23.6%': high - (diff * 0.236),
+                '38.2%': high - (diff * 0.382),
+                '50.0%': high - (diff * 0.5),
+                '61.8%': high - (diff * 0.618),
+                '100.0%': low
+            };
+            
+            const result = document.getElementById('fib-result');
+            result.style.display = 'block';
+            result.innerHTML = '<div class="result-grid">' + 
+                Object.entries(levels).map(([l, p]) => `<div class="result-item"><label>${l}</label><value>${p.toFixed(5)}</value></div>`).join('') + 
+                '</div>';
+        }
+
+        function calculatePivotPoints() {
+            const high = parseFloat(document.getElementById('pivot-high').value);
+            const low = parseFloat(document.getElementById('pivot-low').value);
+            const close = parseFloat(document.getElementById('pivot-close').value);
+            
+            if (!high || !low || !close) return alert('Enter all prices');
+            
+            const p = (high + low + close) / 3;
+            const r1 = (2 * p) - low, r2 = p + (high - low);
+            const s1 = (2 * p) - high, s2 = p - (high - low);
+            
+            const result = document.getElementById('pivot-result');
+            result.style.display = 'block';
+            result.innerHTML = `<div class="result-grid">
+                <div class="result-item"><label>R2</label><value>${r2.toFixed(5)}</value></div>
+                <div class="result-item"><label>R1</label><value>${r1.toFixed(5)}</value></div>
+                <div class="result-item"><label>Pivot</label><value style="color:#ffc107;">${p.toFixed(5)}</value></div>
+                <div class="result-item"><label>S1</label><value>${s1.toFixed(5)}</value></div>
+                <div class="result-item"><label>S2</label><value>${s2.toFixed(5)}</value></div>
+            </div>`;
+        }
+
         function calculateCompounding() {
-            const startingBalance = parseFloat(document.getElementById('starting-balance').value);
-            const monthlyReturn = parseFloat(document.getElementById('monthly-return').value) / 100;
+            const start = parseFloat(document.getElementById('starting-balance').value);
+            const ret = parseFloat(document.getElementById('monthly-return').value) / 100;
             const months = parseInt(document.getElementById('months').value);
-            const withdrawal = parseFloat(document.getElementById('monthly-withdrawal').value) || 0;
             
-            if (!startingBalance || !monthlyReturn || !months) {
-                alert('Please fill in required fields');
-                return;
-            }
+            if (!start || !ret || !months) return alert('Fill required fields');
             
-            let balance = startingBalance;
-            let tableHtml = '';
-            let totalProfit = 0;
+            let balance = start, html = '', totalProfit = 0;
             
             for (let i = 1; i <= months; i++) {
-                const monthProfit = balance * monthlyReturn;
-                totalProfit += monthProfit;
-                balance = balance + monthProfit - withdrawal;
-                
-                if (i <= 24) { // Show first 24 months in table
-                    tableHtml += `
-                        <tr>
-                            <td>Month ${i}</td>
-                            <td>$${balance.toFixed(2)}</td>
-                            <td style="color: #11998e; font-weight: 600;">+$${monthProfit.toFixed(2)}</td>
-                        </tr>
-                    `;
-                }
+                const profit = balance * ret;
+                totalProfit += profit;
+                balance += profit;
+                if (i <= 24) html += `<tr><td>Month ${i}</td><td>$${balance.toFixed(2)}</td><td style="color:#4caf50;">+$${profit.toFixed(2)}</td></tr>`;
             }
             
-            const resultsDiv = document.getElementById('compounding-results');
-            resultsDiv.style.display = 'block';
-            
-            const resultSummary = resultsDiv.querySelector('.result');
-            resultSummary.innerHTML = `
-                <div>Final Balance: $${balance.toFixed(2)}</div>
-                <div style="font-size: 0.9em; margin-top: 10px;">
-                    Total Profit: $${totalProfit.toFixed(2)} | 
-                    ROI: ${((balance - startingBalance) / startingBalance * 100).toFixed(1)}%
-                </div>
-            `;
-            
-            document.getElementById('compounding-table-body').innerHTML = tableHtml;
+            const results = document.getElementById('compounding-results');
+            results.style.display = 'block';
+            results.querySelector('.result').innerHTML = `<div>Final: $${balance.toFixed(2)}</div><div style="font-size:0.9em;margin-top:10px;">Profit: $${totalProfit.toFixed(2)} | ROI: ${((balance-start)/start*100).toFixed(1)}%</div>`;
+            document.getElementById('compounding-table-body').innerHTML = html;
         }
 
-        // Risk/Reward Calculator
         function calculateRiskReward() {
             const entry = parseFloat(document.getElementById('rr-entry').value);
             const sl = parseFloat(document.getElementById('rr-sl').value);
             const tp = parseFloat(document.getElementById('rr-tp').value);
             
-            if (!entry || !sl || !tp) {
-                alert('Please fill in all fields');
-                return;
-            }
+            if (!entry || !sl || !tp) return alert('Fill all fields');
             
-            const riskPips = Math.abs(entry - sl) * 10000;
-            const rewardPips = Math.abs(tp - entry) * 10000;
-            const rrRatio = rewardPips / riskPips;
-            const winRateNeeded = (1 / (1 + rrRatio)) * 100;
+            const risk = Math.abs(entry - sl) * 10000;
+            const reward = Math.abs(tp - entry) * 10000;
+            const rr = reward / risk;
+            const winRate = (1 / (1 + rr)) * 100;
             
             document.getElementById('rr-results').style.display = 'grid';
-            document.getElementById('risk-pips').textContent = riskPips.toFixed(1);
-            document.getElementById('reward-pips').textContent = rewardPips.toFixed(1);
-            document.getElementById('rr-ratio').textContent = `1:${rrRatio.toFixed(2)}`;
-            document.getElementById('win-rate').textContent = `${winRateNeeded.toFixed(1)}%`;
+            document.getElementById('risk-pips').textContent = risk.toFixed(1);
+            document.getElementById('reward-pips').textContent = reward.toFixed(1);
+            document.getElementById('rr-ratio').textContent = `1:${rr.toFixed(2)}`;
+            document.getElementById('win-rate').textContent = `${winRate.toFixed(1)}%`;
         }
-
-        // Initialize - Fetch all prices on load
-        window.addEventListener('load', function() {
-            fetchCryptoPrices();
-            fetchForexPrices();
-            
-            // Auto-refresh every 60 seconds
-            setInterval(function() {
-                fetchCryptoPrices();
-                fetchForexPrices();
-            }, 60000);
-        });
     </script>
 </body>
 </html>
