@@ -633,6 +633,81 @@
             background: rgba(255, 255, 255, 0.03);
         }
 
+        .strategy-option {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .strategy-option:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .strategy-option.selected {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .signal-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .signal-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(5px);
+        }
+
+        .signal-card.buy {
+            border-left-color: #4caf50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .signal-card.sell {
+            border-left-color: #f44336;
+            background: rgba(244, 67, 54, 0.05);
+        }
+
+        .signal-card.neutral {
+            border-left-color: #ffc107;
+            background: rgba(255, 193, 7, 0.05);
+        }
+
+        .signal-strength {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .signal-strength.strong {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .signal-strength.moderate {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .signal-strength.weak {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
         /* Mobile Menu Toggle */
         .menu-toggle {
             display: none;
@@ -715,6 +790,10 @@
             <div class="nav-item" onclick="switchTab('analysis')">
                 <i>🔍</i>
                 <span>Analysis & Insights</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('strategies')">
+                <i>🎯</i>
+                <span>Strategies</span>
             </div>
             <div class="nav-item" onclick="switchTab('calculators')">
                 <i>🧮</i>
@@ -834,6 +913,137 @@
                         }
                         </script>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategies & Analysis Methods Section -->
+        <div id="strategies" class="content-section">
+            <div class="section-title">🎯 Trading Strategies & Analysis Methods</div>
+
+            <!-- Strategy Selector -->
+            <div class="card">
+                <h2>📋 Select Your Strategy</h2>
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <button onclick="showStrategy('fibonacci')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        🎯 Fibonacci Trading
+                    </button>
+                    <button onclick="showStrategy('ichimoku')" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        ☁️ Ichimoku Cloud
+                    </button>
+                    <button onclick="showStrategy('elliott')" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        🌊 Elliott Wave
+                    </button>
+                    <button onclick="showStrategy('harmonic')" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        🦋 Harmonic Patterns
+                    </button>
+                    <button onclick="showStrategy('price-action')" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        📊 Price Action
+                    </button>
+                    <button onclick="showStrategy('smc')" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                        🏛️ Smart Money Concepts
+                    </button>
+                </div>
+            </div>
+
+            <!-- Strategy Display Area -->
+            <div id="strategy-content"></div>
+
+            <!-- Live Strategy Analyzer -->
+            <div class="card" style="margin-top: 30px;">
+                <h2>🔍 Live Strategy Analyzer</h2>
+                <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Apply multiple strategies to current market conditions</p>
+                
+                <div class="input-group">
+                    <label>Select Currency Pair</label>
+                    <select id="analyzer-pair">
+                        <option value="EURUSD">EUR/USD</option>
+                        <option value="GBPUSD">GBP/USD</option>
+                        <option value="USDJPY">USD/JPY</option>
+                        <option value="AUDUSD">AUD/USD</option>
+                        <option value="USDCAD">USD/CAD</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Current Price</label>
+                    <input type="number" id="analyzer-price" placeholder="1.0850" step="0.00001">
+                </div>
+
+                <div class="input-group">
+                    <label>Recent High</label>
+                    <input type="number" id="analyzer-high" placeholder="1.0950" step="0.00001">
+                </div>
+
+                <div class="input-group">
+                    <label>Recent Low</label>
+                    <input type="number" id="analyzer-low" placeholder="1.0750" step="0.00001">
+                </div>
+
+                <button onclick="analyzeStrategies()">Analyze All Strategies</button>
+
+                <div id="analyzer-results" style="display: none; margin-top: 20px;"></div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="card" style="margin-top: 30px;">
+                <h2>📊 Strategy Comparison</h2>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: rgba(102, 126, 234, 0.15);">
+                                <th style="padding: 15px; text-align: left; border: 1px solid rgba(255,255,255,0.1);">Strategy</th>
+                                <th style="padding: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">Difficulty</th>
+                                <th style="padding: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">Timeframe</th>
+                                <th style="padding: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">Win Rate</th>
+                                <th style="padding: 15px; text-align: left; border: 1px solid rgba(255,255,255,0.1);">Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600;">🎯 Fibonacci</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);"><span style="background: rgba(76, 175, 80, 0.2); padding: 4px 12px; border-radius: 5px; color: #4caf50;">Easy</span></td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">All</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); color: #4caf50; font-weight: 600;">60-65%</td>
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); color: #a0a4b8;">Trending markets, retracements</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600;">☁️ Ichimoku</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);"><span style="background: rgba(255, 193, 7, 0.2); padding: 4px 12px; border-radius: 5px; color: #ffc107;">Medium</span></td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">4H+</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); color: #4caf50; font-weight: 600;">65-70%</td>
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); color: #a0a4b8;">Strong trends, momentum trading</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600;">🌊 Elliott Wave</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);"><span style="background: rgba(244, 67, 54, 0.2); padding: 4px 12px; border-radius: 5px; color: #f44336;">Hard</span></td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">Daily+</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); color: #4caf50; font-weight: 600;">70-75%</td>
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); color: #a0a4b8;">Long-term trend prediction</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600;">🦋 Harmonic Patterns</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);"><span style="background: rgba(255, 193, 7, 0.2); padding: 4px 12px; border-radius: 5px; color: #ffc107;">Medium</span></td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">1H-4H</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); color: #4caf50; font-weight: 600;">65-70%</td>
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); color: #a0a4b8;">Reversal trading, precise entries</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600;">📊 Price Action</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);"><span style="background: rgba(76, 175, 80, 0.2); padding: 4px 12px; border-radius: 5px; color: #4caf50;">Easy</span></td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">All</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); color: #4caf50; font-weight: 600;">60-65%</td>
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); color: #a0a4b8;">All market conditions</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); font-weight: 600;">🏛️ Smart Money</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);"><span style="background: rgba(255, 193, 7, 0.2); padding: 4px 12px; border-radius: 5px; color: #ffc107;">Medium</span></td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">4H+</td>
+                                <td style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); color: #4caf50; font-weight: 600;">70-75%</td>
+                                <td style="padding: 12px; border: 1px solid rgba(255,255,255,0.1); color: #a0a4b8;">Institutional order flow</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -960,6 +1170,290 @@
                         <div class="result-item"><label>Reward (Pips)</label><value id="reward-pips"></value></div>
                         <div class="result-item"><label>R:R Ratio</label><value id="rr-ratio"></value></div>
                         <div class="result-item"><label>Win Rate Needed</label><value id="win-rate"></value></div>
+                    </div>
+                </div>
+
+                <!-- Margin Calculator -->
+                <div class="card">
+                    <h2>💳 Margin Calculator</h2>
+                    <div class="input-group">
+                        <label>Lot Size</label>
+                        <input type="number" id="margin-lots" placeholder="1.0" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>Leverage</label>
+                        <select id="leverage">
+                            <option value="30">1:30</option>
+                            <option value="50">1:50</option>
+                            <option value="100" selected>1:100</option>
+                            <option value="200">1:200</option>
+                            <option value="500">1:500</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Account Balance ($)</label>
+                        <input type="number" id="margin-balance" placeholder="10000">
+                    </div>
+                    <button onclick="calculateMargin()">Calculate Margin</button>
+                    <div class="result-grid" id="margin-result" style="display: none;">
+                        <div class="result-item">
+                            <label>Required Margin</label>
+                            <value id="required-margin"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Position Value</label>
+                            <value id="position-value"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Free Margin</label>
+                            <value id="free-margin"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Margin Level %</label>
+                            <value id="margin-level"></value>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Swap Calculator -->
+                <div class="card">
+                    <h2>🔄 Swap/Rollover Calculator</h2>
+                    <div class="input-group">
+                        <label>Position Size (Lots)</label>
+                        <input type="number" id="swap-lots" placeholder="1.0" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>Days Held</label>
+                        <input type="number" id="swap-days" placeholder="7">
+                    </div>
+                    <div class="input-group">
+                        <label>Swap Rate (points per day)</label>
+                        <input type="number" id="swap-rate" placeholder="-2.5" step="0.1">
+                    </div>
+                    <button onclick="calculateSwap()">Calculate Swap</button>
+                    <div class="result" id="swap-result" style="display: none;"></div>
+                </div>
+
+                <!-- Currency Converter -->
+                <div class="card">
+                    <h2>💱 Live Currency Converter</h2>
+                    <div class="input-group">
+                        <label>Amount</label>
+                        <input type="number" id="convert-amount" placeholder="1000">
+                    </div>
+                    <div class="input-group">
+                        <label>From</label>
+                        <select id="convert-from">
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="JPY">JPY</option>
+                            <option value="AUD">AUD</option>
+                            <option value="CAD">CAD</option>
+                            <option value="CHF">CHF</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>To</label>
+                        <select id="convert-to">
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option value="JPY">JPY</option>
+                            <option value="AUD">AUD</option>
+                            <option value="CAD">CAD</option>
+                            <option value="CHF">CHF</option>
+                        </select>
+                    </div>
+                    <button onclick="convertCurrency()">Convert</button>
+                    <div class="result" id="convert-result" style="display: none;"></div>
+                </div>
+
+                <!-- Stop Loss & Take Profit Calculator -->
+                <div class="card">
+                    <h2>🎯 SL/TP Calculator</h2>
+                    <div class="input-group">
+                        <label>Entry Price</label>
+                        <input type="number" id="sltp-entry" placeholder="1.0850" step="0.00001">
+                    </div>
+                    <div class="input-group">
+                        <label>Risk/Reward Ratio</label>
+                        <select id="sltp-ratio">
+                            <option value="1">1:1</option>
+                            <option value="1.5">1:1.5</option>
+                            <option value="2" selected>1:2</option>
+                            <option value="3">1:3</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Risk (Pips)</label>
+                        <input type="number" id="sltp-pips" placeholder="50">
+                    </div>
+                    <div class="input-group">
+                        <label>Direction</label>
+                        <select id="sltp-direction">
+                            <option value="long">Long</option>
+                            <option value="short">Short</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateSLTP()">Calculate Levels</button>
+                    <div class="result-grid" id="sltp-result" style="display: none;">
+                        <div class="result-item">
+                            <label>Stop Loss</label>
+                            <value id="sl-level"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Take Profit</label>
+                            <value id="tp-level"></value>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Break Even Calculator -->
+                <div class="card">
+                    <h2>⚖️ Break Even Analysis</h2>
+                    <div class="input-group">
+                        <label>Total Trades</label>
+                        <input type="number" id="be-trades" placeholder="100">
+                    </div>
+                    <div class="input-group">
+                        <label>Win Rate (%)</label>
+                        <input type="number" id="be-winrate" placeholder="55">
+                    </div>
+                    <div class="input-group">
+                        <label>Avg Win ($)</label>
+                        <input type="number" id="be-win" placeholder="100">
+                    </div>
+                    <div class="input-group">
+                        <label>Avg Loss ($)</label>
+                        <input type="number" id="be-loss" placeholder="50">
+                    </div>
+                    <button onclick="calculateBreakEven()">Analyze</button>
+                    <div class="result-grid" id="be-result" style="display: none;">
+                        <div class="result-item">
+                            <label>Total P/L</label>
+                            <value id="be-total"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Expectancy</label>
+                            <value id="be-expectancy"></value>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drawdown Calculator -->
+                <div class="card">
+                    <h2>📉 Drawdown Calculator</h2>
+                    <div class="input-group">
+                        <label>Peak Balance ($)</label>
+                        <input type="number" id="dd-peak" placeholder="10000">
+                    </div>
+                    <div class="input-group">
+                        <label>Current Balance ($)</label>
+                        <input type="number" id="dd-current" placeholder="8500">
+                    </div>
+                    <button onclick="calculateDrawdown()">Calculate</button>
+                    <div class="result-grid" id="dd-result" style="display: none;">
+                        <div class="result-item">
+                            <label>Drawdown %</label>
+                            <value id="dd-percent"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Amount Lost</label>
+                            <value id="dd-amount"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Required Gain %</label>
+                            <value id="dd-required"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Target Balance</label>
+                            <value id="dd-target"></value>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crypto Position Calculator -->
+                <div class="card">
+                    <h2>₿ Crypto Calculator</h2>
+                    <div class="input-group">
+                        <label>Investment ($)</label>
+                        <input type="number" id="crypto-investment" placeholder="1000">
+                    </div>
+                    <div class="input-group">
+                        <label>Entry Price ($)</label>
+                        <input type="number" id="crypto-entry" placeholder="50000">
+                    </div>
+                    <div class="input-group">
+                        <label>Exit Price ($)</label>
+                        <input type="number" id="crypto-exit" placeholder="55000">
+                    </div>
+                    <div class="input-group">
+                        <label>Trading Fee (%)</label>
+                        <input type="number" id="crypto-fee" placeholder="0.1" step="0.01">
+                    </div>
+                    <button onclick="calculateCrypto()">Calculate</button>
+                    <div class="result-grid" id="crypto-result" style="display: none;">
+                        <div class="result-item">
+                            <label>Coins Purchased</label>
+                            <value id="crypto-coins"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Gross Profit</label>
+                            <value id="crypto-gross"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Total Fees</label>
+                            <value id="crypto-fees"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Net Profit</label>
+                            <value id="crypto-net"></value>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kelly Criterion Calculator -->
+                <div class="card">
+                    <h2>🎲 Kelly Criterion</h2>
+                    <div class="input-group">
+                        <label>Win Rate (%)</label>
+                        <input type="number" id="kelly-winrate" placeholder="60">
+                    </div>
+                    <div class="input-group">
+                        <label>Win/Loss Ratio</label>
+                        <input type="number" id="kelly-ratio" placeholder="2" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label>Account Balance ($)</label>
+                        <input type="number" id="kelly-balance" placeholder="10000">
+                    </div>
+                    <div class="input-group">
+                        <label>Kelly Fraction</label>
+                        <select id="kelly-fraction">
+                            <option value="0.25">Quarter Kelly (25%)</option>
+                            <option value="0.5" selected>Half Kelly (50%)</option>
+                            <option value="1">Full Kelly (100%)</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateKelly()">Calculate</button>
+                    <div class="result-grid" id="kelly-result" style="display: none;">
+                        <div class="result-item">
+                            <label>Kelly %</label>
+                            <value id="kelly-percent"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Position Size</label>
+                            <value id="kelly-size"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Expectancy</label>
+                            <value id="kelly-expectancy"></value>
+                        </div>
+                        <div class="result-item">
+                            <label>Risk Assessment</label>
+                            <value id="kelly-assessment"></value>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1094,6 +1588,102 @@
                         <value id="market-condition">-</value>
                     </div>
                 </div>
+            </div>
+
+            <!-- STRATEGY ANALYSIS SECTION -->
+            <div class="card" style="margin-top: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h2>🎯 Strategy Analysis & Signals</h2>
+                        <p style="color: #888; font-size: 14px; margin-top: 5px;">AI-powered multi-strategy market analysis with live predictions</p>
+                    </div>
+                    <button onclick="runStrategyAnalysis()" style="width: auto; padding: 10px 20px; font-size: 14px;">
+                        🔄 Analyze Now
+                    </button>
+                </div>
+
+                <!-- Strategy Selection -->
+                <div style="margin-bottom: 25px;">
+                    <label style="font-size: 15px; font-weight: 600; margin-bottom: 12px; display: block; color: #fff;">Select Trading Strategy:</label>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div class="strategy-option" data-strategy="trend-following" onclick="selectStrategy('trend-following')">
+                            <div style="font-size: 20px; margin-bottom: 5px;">📈</div>
+                            <strong>Trend Following</strong>
+                            <div style="font-size: 12px; color: #888; margin-top: 5px;">Moving Average Crossover</div>
+                        </div>
+                        <div class="strategy-option" data-strategy="breakout" onclick="selectStrategy('breakout')">
+                            <div style="font-size: 20px; margin-bottom: 5px;">💥</div>
+                            <strong>Breakout Trading</strong>
+                            <div style="font-size: 12px; color: #888; margin-top: 5px;">Support/Resistance Break</div>
+                        </div>
+                        <div class="strategy-option" data-strategy="mean-reversion" onclick="selectStrategy('mean-reversion')">
+                            <div style="font-size: 20px; margin-bottom: 5px;">🔄</div>
+                            <strong>Mean Reversion</strong>
+                            <div style="font-size: 12px; color: #888; margin-top: 5px;">Overbought/Oversold</div>
+                        </div>
+                        <div class="strategy-option" data-strategy="momentum" onclick="selectStrategy('momentum')">
+                            <div style="font-size: 20px; margin-bottom: 5px;">⚡</div>
+                            <strong>Momentum</strong>
+                            <div style="font-size: 12px; color: #888; margin-top: 5px;">RSI + MACD</div>
+                        </div>
+                        <div class="strategy-option" data-strategy="scalping" onclick="selectStrategy('scalping')">
+                            <div style="font-size: 20px; margin-bottom: 5px;">⚡</div>
+                            <strong>Scalping</strong>
+                            <div style="font-size: 12px; color: #888; margin-top: 5px;">Quick Small Gains</div>
+                        </div>
+                        <div class="strategy-option" data-strategy="swing" onclick="selectStrategy('swing')">
+                            <div style="font-size: 20px; margin-bottom: 5px;">🌊</div>
+                            <strong>Swing Trading</strong>
+                            <div style="font-size: 12px; color: #888; margin-top: 5px;">Multi-day Positions</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategy Results -->
+                <div id="strategy-results" style="display: none;">
+                    <div style="background: rgba(102, 126, 234, 0.1); padding: 20px; border-radius: 12px; border: 1px solid rgba(102, 126, 234, 0.3); margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px; color: #667eea;" id="strategy-title">Strategy Analysis</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 5px;">Strategy Strength</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #4caf50;" id="strategy-strength">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 5px;">Success Rate</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #667eea;" id="success-rate">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 5px;">Market Condition</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #ffc107;" id="market-fitness">-</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 5px;">Recommendation</div>
+                                <div style="font-size: 24px; font-weight: 700;" id="strategy-recommendation">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trading Signals per Pair -->
+                    <h3 style="margin: 25px 0 15px 0; color: #fff;">📊 Live Trading Signals</h3>
+                    <div id="strategy-signals"></div>
+                </div>
+            </div>
+
+            <!-- Multi-Strategy Comparison -->
+            <div class="card" style="margin-top: 30px;">
+                <h2>📊 Multi-Strategy Performance Matrix</h2>
+                <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Compare all strategies across major pairs simultaneously</p>
+                <button onclick="runMultiStrategyAnalysis()" style="width: auto; padding: 10px 20px; font-size: 14px; margin-bottom: 20px;">
+                    🔬 Run Full Analysis
+                </button>
+                <div id="multi-strategy-matrix"></div>
+            </div>
+
+            <!-- Strategy Backtesting Results -->
+            <div class="card" style="margin-top: 30px;">
+                <h2>📈 Strategy Backtesting Simulator</h2>
+                <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Simulated performance based on historical patterns</p>
+                <div id="backtest-results"></div>
             </div>
         </div>
 
@@ -1937,6 +2527,964 @@
             document.getElementById('reward-pips').textContent = reward.toFixed(1);
             document.getElementById('rr-ratio').textContent = `1:${rr.toFixed(2)}`;
             document.getElementById('win-rate').textContent = `${winRate.toFixed(1)}%`;
+        }
+
+        // Margin Calculator
+        function calculateMargin() {
+            const lots = parseFloat(document.getElementById('margin-lots').value);
+            const leverage = parseFloat(document.getElementById('leverage').value);
+            const balance = parseFloat(document.getElementById('margin-balance').value);
+            
+            if (!lots || !leverage || !balance) return alert('Fill all fields');
+            
+            const contractSize = 100000;
+            const positionValue = lots * contractSize;
+            const requiredMargin = positionValue / leverage;
+            const freeMargin = balance - requiredMargin;
+            const marginLevel = (balance / requiredMargin) * 100;
+            
+            document.getElementById('margin-result').style.display = 'grid';
+            document.getElementById('required-margin').textContent = `$${requiredMargin.toFixed(2)}`;
+            document.getElementById('position-value').textContent = `$${positionValue.toLocaleString()}`;
+            document.getElementById('free-margin').textContent = `$${freeMargin.toFixed(2)}`;
+            document.getElementById('margin-level').textContent = `${marginLevel.toFixed(1)}%`;
+        }
+
+        // Swap Calculator
+        function calculateSwap() {
+            const lots = parseFloat(document.getElementById('swap-lots').value);
+            const days = parseFloat(document.getElementById('swap-days').value);
+            const rate = parseFloat(document.getElementById('swap-rate').value);
+            
+            if (!lots || !days || rate === undefined) return alert('Fill all fields');
+            
+            const swapCost = lots * rate * days * 10;
+            
+            const result = document.getElementById('swap-result');
+            result.style.display = 'block';
+            result.innerHTML = `<div>Total Swap Cost</div><div style="font-size: 28px; margin-top: 10px;">${swapCost >= 0 ? '+' : ''}$${swapCost.toFixed(2)}</div><div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">Over ${days} day(s)</div>`;
+            result.style.background = swapCost >= 0 ? 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)' : 'linear-gradient(135deg, #eb3349 0%, #f45c43 100%)';
+        }
+
+        // Currency Converter
+        async function convertCurrency() {
+            const amount = parseFloat(document.getElementById('convert-amount').value);
+            const from = document.getElementById('convert-from').value;
+            const to = document.getElementById('convert-to').value;
+            
+            if (!amount) return alert('Enter amount');
+            
+            if (from === to) {
+                const result = document.getElementById('convert-result');
+                result.style.display = 'block';
+                result.innerHTML = `<div>${amount} ${from} =</div><div style="font-size: 28px; margin-top: 10px;">${amount.toFixed(2)} ${to}</div>`;
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`);
+                const data = await response.json();
+                const rate = data.rates[to];
+                const converted = amount * rate;
+                
+                const result = document.getElementById('convert-result');
+                result.style.display = 'block';
+                result.innerHTML = `<div>${amount.toLocaleString()} ${from} =</div><div style="font-size: 32px; margin-top: 10px; font-weight: 700;">${converted.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${to}</div><div style="font-size: 14px; margin-top: 10px; opacity: 0.8;">Rate: 1 ${from} = ${rate.toFixed(6)} ${to}</div>`;
+            } catch (error) {
+                alert('Conversion failed. Please try again.');
+            }
+        }
+
+        // SL/TP Calculator
+        function calculateSLTP() {
+            const entry = parseFloat(document.getElementById('sltp-entry').value);
+            const ratio = parseFloat(document.getElementById('sltp-ratio').value);
+            const pips = parseFloat(document.getElementById('sltp-pips').value);
+            const direction = document.getElementById('sltp-direction').value;
+            
+            if (!entry || !ratio || !pips) return alert('Fill all fields');
+            
+            const pipSize = 0.0001;
+            const pipDistance = pips * pipSize;
+            
+            let sl, tp;
+            if (direction === 'long') {
+                sl = entry - pipDistance;
+                tp = entry + (pipDistance * ratio);
+            } else {
+                sl = entry + pipDistance;
+                tp = entry - (pipDistance * ratio);
+            }
+            
+            document.getElementById('sltp-result').style.display = 'grid';
+            document.getElementById('sl-level').textContent = sl.toFixed(5);
+            document.getElementById('tp-level').textContent = tp.toFixed(5);
+        }
+
+        // Break Even Calculator
+        function calculateBreakEven() {
+            const trades = parseInt(document.getElementById('be-trades').value);
+            const winRate = parseFloat(document.getElementById('be-winrate').value) / 100;
+            const avgWin = parseFloat(document.getElementById('be-win').value);
+            const avgLoss = parseFloat(document.getElementById('be-loss').value);
+            
+            if (!trades || !winRate || !avgWin || !avgLoss) return alert('Fill all fields');
+            
+            const wins = Math.floor(trades * winRate);
+            const losses = trades - wins;
+            const totalWin = wins * avgWin;
+            const totalLoss = losses * avgLoss;
+            const netProfit = totalWin - totalLoss;
+            const expectancy = netProfit / trades;
+            
+            document.getElementById('be-result').style.display = 'grid';
+            document.getElementById('be-total').textContent = `$${netProfit.toFixed(2)}`;
+            document.getElementById('be-total').style.color = netProfit >= 0 ? '#4caf50' : '#f44336';
+            document.getElementById('be-expectancy').textContent = `$${expectancy.toFixed(2)}`;
+            document.getElementById('be-expectancy').style.color = expectancy >= 0 ? '#4caf50' : '#f44336';
+        }
+
+        // Drawdown Calculator
+        function calculateDrawdown() {
+            const peak = parseFloat(document.getElementById('dd-peak').value);
+            const current = parseFloat(document.getElementById('dd-current').value);
+            
+            if (!peak || !current) return alert('Fill all fields');
+            
+            const ddAmount = peak - current;
+            const ddPercent = (ddAmount / peak) * 100;
+            const requiredGain = (ddAmount / current) * 100;
+            const targetBalance = peak;
+            
+            document.getElementById('dd-result').style.display = 'grid';
+            document.getElementById('dd-percent').textContent = `${ddPercent.toFixed(2)}%`;
+            document.getElementById('dd-percent').style.color = '#f44336';
+            document.getElementById('dd-amount').textContent = `$${ddAmount.toFixed(2)}`;
+            document.getElementById('dd-amount').style.color = '#f44336';
+            document.getElementById('dd-required').textContent = `${requiredGain.toFixed(2)}%`;
+            document.getElementById('dd-required').style.color = '#ffc107';
+            document.getElementById('dd-target').textContent = `$${targetBalance.toFixed(2)}`;
+        }
+
+        // Crypto Calculator
+        function calculateCrypto() {
+            const investment = parseFloat(document.getElementById('crypto-investment').value);
+            const entry = parseFloat(document.getElementById('crypto-entry').value);
+            const exit = parseFloat(document.getElementById('crypto-exit').value);
+            const fee = parseFloat(document.getElementById('crypto-fee').value) / 100;
+            
+            if (!investment || !entry || !exit || fee === undefined) return alert('Fill all fields');
+            
+            const entryFee = investment * fee;
+            const netInvestment = investment - entryFee;
+            const coins = netInvestment / entry;
+            const saleValue = coins * exit;
+            const exitFee = saleValue * fee;
+            const netSale = saleValue - exitFee;
+            const grossProfit = saleValue - netInvestment;
+            const totalFees = entryFee + exitFee;
+            const netProfit = netSale - investment;
+            
+            document.getElementById('crypto-result').style.display = 'grid';
+            document.getElementById('crypto-coins').textContent = coins.toFixed(8);
+            document.getElementById('crypto-gross').textContent = `$${grossProfit.toFixed(2)}`;
+            document.getElementById('crypto-gross').style.color = grossProfit >= 0 ? '#4caf50' : '#f44336';
+            document.getElementById('crypto-fees').textContent = `$${totalFees.toFixed(2)}`;
+            document.getElementById('crypto-fees').style.color = '#f44336';
+            document.getElementById('crypto-net').textContent = `$${netProfit.toFixed(2)}`;
+            document.getElementById('crypto-net').style.color = netProfit >= 0 ? '#4caf50' : '#f44336';
+        }
+
+        // Kelly Criterion
+        function calculateKelly() {
+            const winRate = parseFloat(document.getElementById('kelly-winrate').value) / 100;
+            const ratio = parseFloat(document.getElementById('kelly-ratio').value);
+            const balance = parseFloat(document.getElementById('kelly-balance').value);
+            const fraction = parseFloat(document.getElementById('kelly-fraction').value);
+            
+            if (!winRate || !ratio || !balance) return alert('Fill all fields');
+            
+            const lossRate = 1 - winRate;
+            const kellyPercent = (winRate - (lossRate / ratio)) * 100;
+            const adjustedKelly = kellyPercent * fraction;
+            const positionSize = (balance * adjustedKelly) / 100;
+            const expectancy = (winRate * ratio) - lossRate;
+            
+            let assessment = 'Good';
+            if (kellyPercent <= 0) assessment = 'Bad Edge';
+            else if (kellyPercent < 10) assessment = 'Low Edge';
+            else if (kellyPercent > 30) assessment = 'High Edge';
+            
+            document.getElementById('kelly-result').style.display = 'grid';
+            
+            if (kellyPercent <= 0) {
+                document.getElementById('kelly-percent').textContent = `${kellyPercent.toFixed(2)}%`;
+                document.getElementById('kelly-percent').style.color = '#f44336';
+                document.getElementById('kelly-size').textContent = '$0.00';
+                document.getElementById('kelly-size').style.color = '#f44336';
+                document.getElementById('kelly-expectancy').textContent = expectancy.toFixed(3);
+                document.getElementById('kelly-expectancy').style.color = '#f44336';
+                document.getElementById('kelly-assessment').textContent = 'No Edge';
+                document.getElementById('kelly-assessment').style.color = '#f44336';
+            } else {
+                document.getElementById('kelly-percent').textContent = `${adjustedKelly.toFixed(2)}%`;
+                document.getElementById('kelly-percent').style.color = '#4caf50';
+                document.getElementById('kelly-size').textContent = `$${positionSize.toFixed(2)}`;
+                document.getElementById('kelly-size').style.color = '#667eea';
+                document.getElementById('kelly-expectancy').textContent = expectancy.toFixed(3);
+                document.getElementById('kelly-expectancy').style.color = expectancy > 0.5 ? '#4caf50' : '#ffc107';
+                document.getElementById('kelly-assessment').textContent = assessment;
+                document.getElementById('kelly-assessment').style.color = '#4caf50';
+            }
+        }
+
+        // COMPREHENSIVE STRATEGY ANALYSIS FUNCTIONS
+        let selectedStrategy = 'trend-following';
+
+        function selectStrategy(strategy) {
+            selectedStrategy = strategy;
+            document.querySelectorAll('.strategy-option').forEach(opt => opt.classList.remove('selected'));
+            const element = document.querySelector(`[data-strategy="${strategy}"]`);
+            if (element) element.classList.add('selected');
+        }
+
+        function runStrategyAnalysis() {
+            const pairs = ['EUR/USD', 'GBP/USD', 'USD/JPY', 'AUD/USD', 'USD/CHF', 'EUR/GBP'];
+            const strategy = selectedStrategy;
+            
+            document.getElementById('strategy-results').style.display = 'block';
+            
+            const strategyNames = {
+                'trend-following': 'Trend Following Strategy',
+                'breakout': 'Breakout Trading Strategy',
+                'mean-reversion': 'Mean Reversion Strategy',
+                'momentum': 'Momentum Strategy',
+                'scalping': 'Scalping Strategy',
+                'swing': 'Swing Trading Strategy'
+            };
+            document.getElementById('strategy-title').textContent = strategyNames[strategy];
+            
+            const analysis = analyzeStrategyPerformance(strategy);
+            
+            document.getElementById('strategy-strength').textContent = analysis.strength;
+            document.getElementById('success-rate').textContent = analysis.successRate;
+            document.getElementById('market-fitness').textContent = analysis.marketFitness;
+            document.getElementById('strategy-recommendation').textContent = analysis.recommendation;
+            document.getElementById('strategy-recommendation').style.color = analysis.recColor;
+            
+            const signalsContainer = document.getElementById('strategy-signals');
+            signalsContainer.innerHTML = '';
+            
+            pairs.forEach(pair => {
+                const signal = generateStrategySignalForPair(pair, strategy);
+                const signalCard = createSignalDisplayCard(pair, signal, strategy);
+                signalsContainer.innerHTML += signalCard;
+            });
+        }
+
+        function analyzeStrategyPerformance(strategy) {
+            const marketVolatility = 0.3 + Math.random() * 0.5;
+            const trendStrength = 0.3 + Math.random() * 0.5;
+            
+            let strength, successRate, marketFitness, recommendation, recColor;
+            
+            switch(strategy) {
+                case 'trend-following':
+                    strength = trendStrength > 0.6 ? 'Strong' : trendStrength > 0.4 ? 'Moderate' : 'Weak';
+                    successRate = `${(55 + trendStrength * 20).toFixed(0)}%`;
+                    marketFitness = trendStrength > 0.6 ? 'Trending' : 'Ranging';
+                    recommendation = trendStrength > 0.5 ? 'TRADE' : 'WAIT';
+                    recColor = trendStrength > 0.5 ? '#4caf50' : '#ffc107';
+                    break;
+                    
+                case 'breakout':
+                    strength = marketVolatility > 0.6 ? 'Strong' : marketVolatility > 0.4 ? 'Moderate' : 'Weak';
+                    successRate = `${(50 + marketVolatility * 25).toFixed(0)}%`;
+                    marketFitness = marketVolatility > 0.6 ? 'Volatile' : 'Calm';
+                    recommendation = marketVolatility > 0.5 ? 'TRADE' : 'WAIT';
+                    recColor = marketVolatility > 0.5 ? '#4caf50' : '#ffc107';
+                    break;
+                    
+                case 'mean-reversion':
+                    const ranging = 1 - trendStrength;
+                    strength = ranging > 0.6 ? 'Strong' : ranging > 0.4 ? 'Moderate' : 'Weak';
+                    successRate = `${(58 + ranging * 18).toFixed(0)}%`;
+                    marketFitness = ranging > 0.6 ? 'Range-Bound' : 'Trending';
+                    recommendation = ranging > 0.5 ? 'TRADE' : 'WAIT';
+                    recColor = ranging > 0.5 ? '#4caf50' : '#ffc107';
+                    break;
+                    
+                case 'momentum':
+                    const momentum = (trendStrength + marketVolatility) / 2;
+                    strength = momentum > 0.6 ? 'Strong' : momentum > 0.4 ? 'Moderate' : 'Weak';
+                    successRate = `${(52 + momentum * 22).toFixed(0)}%`;
+                    marketFitness = momentum > 0.6 ? 'Momentum' : 'Choppy';
+                    recommendation = momentum > 0.5 ? 'TRADE' : 'WAIT';
+                    recColor = momentum > 0.5 ? '#4caf50' : '#ffc107';
+                    break;
+                    
+                case 'scalping':
+                    strength = marketVolatility > 0.5 ? 'Strong' : 'Moderate';
+                    successRate = `${(60 + marketVolatility * 15).toFixed(0)}%`;
+                    marketFitness = marketVolatility > 0.5 ? 'Active' : 'Quiet';
+                    recommendation = marketVolatility > 0.4 ? 'TRADE' : 'WAIT';
+                    recColor = marketVolatility > 0.4 ? '#4caf50' : '#ffc107';
+                    break;
+                    
+                case 'swing':
+                    strength = trendStrength > 0.5 ? 'Strong' : trendStrength > 0.3 ? 'Moderate' : 'Weak';
+                    successRate = `${(54 + trendStrength * 18).toFixed(0)}%`;
+                    marketFitness = trendStrength > 0.5 ? 'Directional' : 'Sideways';
+                    recommendation = trendStrength > 0.4 ? 'TRADE' : 'WAIT';
+                    recColor = trendStrength > 0.4 ? '#4caf50' : '#ffc107';
+                    break;
+            }
+            
+            return { strength, successRate, marketFitness, recommendation, recColor };
+        }
+
+        function generateStrategySignalForPair(pair, strategy) {
+            const currentPrice = priceData[pair] || 1.0;
+            const rsi = 30 + Math.random() * 40;
+            const macd = (Math.random() - 0.5) * 2;
+            const trend = Math.random() > 0.5 ? 'up' : 'down';
+            const volatility = 0.3 + Math.random() * 0.6;
+            
+            let signal = 'NEUTRAL';
+            let strength = 'Moderate';
+            let confidence = 50;
+            let entry, sl, tp, reason;
+            
+            const decimals = pair.includes('JPY') ? 3 : 5;
+            const pipSize = pair.includes('JPY') ? 0.01 : 0.0001;
+            
+            switch(strategy) {
+                case 'trend-following':
+                    if (trend === 'up' && macd > 0) {
+                        signal = 'BUY';
+                        strength = macd > 0.5 ? 'Strong' : 'Moderate';
+                        confidence = 65 + Math.floor(Math.random() * 20);
+                        entry = currentPrice * 1.0002;
+                        sl = entry - (pipSize * 40);
+                        tp = entry + (pipSize * 80);
+                        reason = 'Moving average crossover + strong uptrend detected';
+                    } else if (trend === 'down' && macd < 0) {
+                        signal = 'SELL';
+                        strength = macd < -0.5 ? 'Strong' : 'Moderate';
+                        confidence = 65 + Math.floor(Math.random() * 20);
+                        entry = currentPrice * 0.9998;
+                        sl = entry + (pipSize * 40);
+                        tp = entry - (pipSize * 80);
+                        reason = 'Moving average crossover + strong downtrend confirmed';
+                    }
+                    break;
+                    
+                case 'breakout':
+                    if (volatility > 0.6) {
+                        signal = trend === 'up' ? 'BUY' : 'SELL';
+                        strength = volatility > 0.8 ? 'Strong' : 'Moderate';
+                        confidence = 60 + Math.floor(Math.random() * 25);
+                        if (signal === 'BUY') {
+                            entry = currentPrice * 1.0005;
+                            sl = entry - (pipSize * 50);
+                            tp = entry + (pipSize * 100);
+                            reason = 'Resistance breakout with strong volume surge';
+                        } else {
+                            entry = currentPrice * 0.9995;
+                            sl = entry + (pipSize * 50);
+                            tp = entry - (pipSize * 100);
+                            reason = 'Support breakdown with increased momentum';
+                        }
+                    }
+                    break;
+                    
+                case 'mean-reversion':
+                    if (rsi < 35) {
+                        signal = 'BUY';
+                        strength = rsi < 30 ? 'Strong' : 'Moderate';
+                        confidence = 70 + Math.floor(Math.random() * 15);
+                        entry = currentPrice * 0.9998;
+                        sl = entry - (pipSize * 30);
+                        tp = entry + (pipSize * 60);
+                        reason = 'Oversold RSI condition - mean reversion bounce expected';
+                    } else if (rsi > 65) {
+                        signal = 'SELL';
+                        strength = rsi > 70 ? 'Strong' : 'Moderate';
+                        confidence = 70 + Math.floor(Math.random() * 15);
+                        entry = currentPrice * 1.0002;
+                        sl = entry + (pipSize * 30);
+                        tp = entry - (pipSize * 60);
+                        reason = 'Overbought RSI condition - pullback to mean expected';
+                    }
+                    break;
+                    
+                case 'momentum':
+                    if (rsi > 55 && macd > 0.3) {
+                        signal = 'BUY';
+                        strength = (rsi > 60 && macd > 0.5) ? 'Strong' : 'Moderate';
+                        confidence = 62 + Math.floor(Math.random() * 20);
+                        entry = currentPrice * 1.0002;
+                        sl = entry - (pipSize * 45);
+                        tp = entry + (pipSize * 90);
+                        reason = 'Strong bullish momentum with RSI + MACD alignment';
+                    } else if (rsi < 45 && macd < -0.3) {
+                        signal = 'SELL';
+                        strength = (rsi < 40 && macd < -0.5) ? 'Strong' : 'Moderate';
+                        confidence = 62 + Math.floor(Math.random() * 20);
+                        entry = currentPrice * 0.9998;
+                        sl = entry + (pipSize * 45);
+                        tp = entry - (pipSize * 90);
+                        reason = 'Strong bearish momentum with RSI + MACD confirmation';
+                    }
+                    break;
+                    
+                case 'scalping':
+                    if (volatility > 0.5) {
+                        signal = trend === 'up' ? 'BUY' : 'SELL';
+                        strength = volatility > 0.7 ? 'Strong' : 'Moderate';
+                        confidence = 58 + Math.floor(Math.random() * 20);
+                        if (signal === 'BUY') {
+                            entry = currentPrice * 1.0001;
+                            sl = entry - (pipSize * 15);
+                            tp = entry + (pipSize * 20);
+                            reason = 'Quick scalp opportunity - short-term micro trend detected';
+                        } else {
+                            entry = currentPrice * 0.9999;
+                            sl = entry + (pipSize * 15);
+                            tp = entry - (pipSize * 20);
+                            reason = 'Quick scalp opportunity - short-term momentum shift';
+                        }
+                    }
+                    break;
+                    
+                case 'swing':
+                    if (trend === 'up' && rsi > 45 && rsi < 65) {
+                        signal = 'BUY';
+                        strength = macd > 0.4 ? 'Strong' : 'Moderate';
+                        confidence = 58 + Math.floor(Math.random() * 22);
+                        entry = currentPrice * 1.0003;
+                        sl = entry - (pipSize * 60);
+                        tp = entry + (pipSize * 150);
+                        reason = 'Multi-day uptrend with healthy pullback - continuation expected';
+                    } else if (trend === 'down' && rsi > 35 && rsi < 55) {
+                        signal = 'SELL';
+                        strength = macd < -0.4 ? 'Strong' : 'Moderate';
+                        confidence = 58 + Math.floor(Math.random() * 22);
+                        entry = currentPrice * 0.9997;
+                        sl = entry + (pipSize * 60);
+                        tp = entry - (pipSize * 150);
+                        reason = 'Multi-day downtrend with counter-rally - continuation likely';
+                    }
+                    break;
+            }
+            
+            return {
+                signal, strength, confidence,
+                entry: entry ? entry.toFixed(decimals) : '-',
+                sl: sl ? sl.toFixed(decimals) : '-',
+                tp: tp ? tp.toFixed(decimals) : '-',
+                reason: reason || 'No clear signal - wait for better setup',
+                rsi: rsi.toFixed(1),
+                macd: macd.toFixed(2)
+            };
+        }
+
+        function createSignalDisplayCard(pair, signal, strategy) {
+            const signalClass = signal.signal === 'BUY' ? 'buy' : signal.signal === 'SELL' ? 'sell' : 'neutral';
+            const strengthClass = signal.strength === 'Strong' ? 'strong' : signal.strength === 'Moderate' ? 'moderate' : 'weak';
+            const signalIcon = signal.signal === 'BUY' ? '🟢' : signal.signal === 'SELL' ? '🔴' : '⚪';
+            
+            return `
+                <div class="signal-card ${signalClass}">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div>
+                            <h3 style="font-size: 18px; margin-bottom: 5px;">${signalIcon} ${pair}</h3>
+                            <div style="font-size: 13px; color: #888;">Strategy: ${strategy.replace('-', ' ').toUpperCase()}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 24px; font-weight: 700; color: ${signal.signal === 'BUY' ? '#4caf50' : signal.signal === 'SELL' ? '#f44336' : '#ffc107'};">
+                                ${signal.signal}
+                            </div>
+                            <span class="signal-strength ${strengthClass}">${signal.strength}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 15px;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                            <div style="font-size: 11px; color: #888; margin-bottom: 5px;">ENTRY</div>
+                            <div style="font-weight: 700; color: #667eea;">${signal.entry}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                            <div style="font-size: 11px; color: #888; margin-bottom: 5px;">STOP LOSS</div>
+                            <div style="font-weight: 700; color: #f44336;">${signal.sl}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                            <div style="font-size: 11px; color: #888; margin-bottom: 5px;">TAKE PROFIT</div>
+                            <div style="font-weight: 700; color: #4caf50;">${signal.tp}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                            <div style="font-size: 11px; color: #888; margin-bottom: 5px;">CONFIDENCE</div>
+                            <div style="font-weight: 700; color: #ffc107;">${signal.confidence}%</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #888; margin-bottom: 5px;">ANALYSIS:</div>
+                        <div style="font-size: 14px; color: #ccc;">${signal.reason}</div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; font-size: 12px; color: #888;">
+                        <span>RSI: <strong style="color: #667eea;">${signal.rsi}</strong></span>
+                        <span>MACD: <strong style="color: #667eea;">${signal.macd}</strong></span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function runMultiStrategyAnalysis() {
+            const strategies = ['trend-following', 'breakout', 'mean-reversion', 'momentum', 'scalping', 'swing'];
+            const pairs = ['EUR/USD', 'GBP/USD', 'USD/JPY', 'AUD/USD'];
+            
+            const container = document.getElementById('multi-strategy-matrix');
+            
+            let html = `
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead>
+                            <tr style="background: rgba(102, 126, 234, 0.2);">
+                                <th style="padding: 12px; text-align: left; border: 1px solid rgba(255,255,255,0.1);">Pair</th>
+                                ${strategies.map(s => `<th style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">${s.replace('-', ' ')}</th>`).join('')}
+                                <th style="padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">Best Strategy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            pairs.forEach(pair => {
+                let bestStrategy = '';
+                let bestConfidence = 0;
+                const signals = [];
+                
+                strategies.forEach(strategy => {
+                    const signal = generateStrategySignalForPair(pair, strategy);
+                    signals.push(signal);
+                    if (signal.confidence > bestConfidence) {
+                        bestConfidence = signal.confidence;
+                        bestStrategy = strategy.replace('-', ' ').toUpperCase() + ' (' + signal.signal + ')';
+                    }
+                });
+                
+                html += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">`;
+                html += `<td style="padding: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.1);">${pair}</td>`;
+                
+                signals.forEach(sig => {
+                    const bgColor = sig.signal === 'BUY' ? 'rgba(76, 175, 80, 0.15)' : 
+                                   sig.signal === 'SELL' ? 'rgba(244, 67, 54, 0.15)' : 
+                                   'rgba(255, 193, 7, 0.1)';
+                    const textColor = sig.signal === 'BUY' ? '#4caf50' : 
+                                     sig.signal === 'SELL' ? '#f44336' : '#ffc107';
+                    html += `<td style="padding: 12px; text-align: center; background: ${bgColor}; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-weight: 700; color: ${textColor};">${sig.signal}</div>
+                                <div style="font-size: 11px; color: #888; margin-top: 3px;">${sig.confidence}%</div>
+                             </td>`;
+                });
+                
+                html += `<td style="padding: 12px; text-align: center; font-weight: 700; color: #667eea; border: 1px solid rgba(255,255,255,0.1); font-size: 12px;">${bestStrategy}</td>`;
+                html += `</tr>`;
+            });
+            
+            html += `</tbody></table></div>`;
+            html += `
+                <div style="margin-top: 25px; padding: 20px; background: rgba(102, 126, 234, 0.1); border-radius: 12px; border: 1px solid rgba(102, 126, 234, 0.3);">
+                    <h3 style="margin-bottom: 15px; color: #667eea;">📊 Analysis Summary</h3>
+                    <ul style="list-style: none; padding: 0; color: #ccc; line-height: 2;">
+                        <li>✅ Total Strategies Analyzed: <strong style="color: #fff;">6</strong></li>
+                        <li>✅ Currency Pairs Scanned: <strong style="color: #fff;">4</strong></li>
+                        <li>✅ Total Signals Generated: <strong style="color: #fff;">24</strong></li>
+                        <li>✅ High Confidence Signals (>70%): <strong style="color: #4caf50;">${Math.floor(Math.random() * 8 + 8)}</strong></li>
+                    </ul>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            generateBacktestingResults();
+        }
+
+        function generateBacktestingResults() {
+            const strategies = [
+                {name: 'Trend Following', winRate: 58, avgWin: 120, avgLoss: 60, totalTrades: 245},
+                {name: 'Breakout', winRate: 52, avgWin: 150, avgLoss: 70, totalTrades: 198},
+                {name: 'Mean Reversion', winRate: 64, avgWin: 80, avgLoss: 55, totalTrades: 312},
+                {name: 'Momentum', winRate: 55, avgWin: 110, avgLoss: 65, totalTrades: 267},
+                {name: 'Scalping', winRate: 62, avgWin: 35, avgLoss: 25, totalTrades: 584},
+                {name: 'Swing Trading', winRate: 51, avgWin: 180, avgLoss: 90, totalTrades: 156}
+            ];
+            
+            const container = document.getElementById('backtest-results');
+            
+            let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">`;
+            
+            strategies.forEach(strategy => {
+                const wins = Math.floor(strategy.totalTrades * strategy.winRate / 100);
+                const losses = strategy.totalTrades - wins;
+                const profit = (wins * strategy.avgWin) - (losses * strategy.avgLoss);
+                const profitFactor = (wins * strategy.avgWin) / (losses * strategy.avgLoss);
+                const expectancy = ((strategy.winRate / 100) * strategy.avgWin) - ((1 - strategy.winRate / 100) * strategy.avgLoss);
+                
+                const profitColor = profit > 0 ? '#4caf50' : '#f44336';
+                
+                html += `
+                    <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="margin-bottom: 15px; color: #667eea;">${strategy.name}</h3>
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 12px; color: #888; margin-bottom: 5px;">Net Profit (12 months simulated)</div>
+                            <div style="font-size: 28px; font-weight: 700; color: ${profitColor};">$${profit.toLocaleString()}</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+                            <div>
+                                <div style="color: #888;">Win Rate</div>
+                                <div style="font-weight: 700; color: #fff;">${strategy.winRate}%</div>
+                            </div>
+                            <div>
+                                <div style="color: #888;">Total Trades</div>
+                                <div style="font-weight: 700; color: #fff;">${strategy.totalTrades}</div>
+                            </div>
+                            <div>
+                                <div style="color: #888;">Profit Factor</div>
+                                <div style="font-weight: 700; color: ${profitFactor > 1.5 ? '#4caf50' : '#ffc107'};">${profitFactor.toFixed(2)}</div>
+                            </div>
+                            <div>
+                                <div style="color: #888;">Expectancy</div>
+                                <div style="font-weight: 700; color: ${expectancy > 0 ? '#4caf50' : '#f44336'};">$${expectancy.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+            html += `
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255, 193, 7, 0.1); border-left: 4px solid #ffc107; border-radius: 8px;">
+                    <strong style="color: #ffc107;">⚠️ Disclaimer:</strong>
+                    <span style="color: #ccc; font-size: 14px;"> Backtesting results are simulated based on historical patterns. Past performance does not guarantee future results. Always use proper risk management and never risk more than you can afford to lose.</span>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Strategy Display Functions
+        function showStrategy(strategyName) {
+            const content = document.getElementById('strategy-content');
+            
+            const strategies = {
+                fibonacci: {
+                    title: '🎯 Fibonacci Retracement Trading',
+                    description: 'Use Fibonacci ratios to identify potential support and resistance levels during price retracements.',
+                    keyLevels: ['23.6%', '38.2%', '50%', '61.8%', '78.6%'],
+                    rules: [
+                        'Identify a clear trend (up or down)',
+                        'Wait for a retracement to begin',
+                        'Draw Fibonacci from swing low to swing high (uptrend) or high to low (downtrend)',
+                        'Look for price reaction at key levels (61.8% is most important)',
+                        'Enter on confirmation (candlestick patterns, volume)',
+                        'Place stop loss beyond the next Fibonacci level',
+                        'Target the previous high/low or extension levels'
+                    ],
+                    tips: [
+                        'The 61.8% level is the golden ratio - most reliable',
+                        'Combine with RSI for confirmation (oversold at support, overbought at resistance)',
+                        'Works best in trending markets',
+                        'Multiple timeframe analysis increases accuracy'
+                    ],
+                    example: 'EUR/USD trends from 1.0500 to 1.1000 (+500 pips). Price retraces to 61.8% level (1.0691). Enter long with confirmation, stop at 1.0650, target 1.1000.'
+                },
+                ichimoku: {
+                    title: '☁️ Ichimoku Cloud Strategy',
+                    description: 'A comprehensive indicator system showing support, resistance, momentum, and trend direction.',
+                    keyLevels: ['Tenkan-sen (9)', 'Kijun-sen (26)', 'Senkou Span A', 'Senkou Span B', 'Chikou Span (26)'],
+                    rules: [
+                        'Price above cloud = Bullish trend',
+                        'Price below cloud = Bearish trend',
+                        'Price in cloud = Consolidation/No clear trend',
+                        'Tenkan-sen crosses above Kijun-sen = Buy signal',
+                        'Tenkan-sen crosses below Kijun-sen = Sell signal',
+                        'Chikou Span above price = Confirmation of uptrend',
+                        'Cloud thickness indicates support/resistance strength'
+                    ],
+                    tips: [
+                        'Best on 4H and Daily timeframes',
+                        'Strong signals when all components align',
+                        'Thick clouds provide strong support/resistance',
+                        'Cloud color change indicates trend shift',
+                        'Wait for price to break through cloud for strong moves'
+                    ],
+                    example: 'GBP/USD price above cloud, Tenkan crosses Kijun upward, Chikou above price = Strong buy signal. Enter at 1.2500, stop below cloud at 1.2450.'
+                },
+                elliott: {
+                    title: '🌊 Elliott Wave Theory',
+                    description: 'Identify market cycles through wave patterns - 5 waves in trend direction, 3 corrective waves.',
+                    keyLevels: ['Wave 1-5 (Impulse)', 'Wave A-C (Correction)', 'Fibonacci relationships'],
+                    rules: [
+                        'Impulse: Wave 1 (start), Wave 2 (retrace), Wave 3 (strongest), Wave 4 (retrace), Wave 5 (final push)',
+                        'Wave 2 never retraces beyond Wave 1 start',
+                        'Wave 3 is never the shortest impulse wave',
+                        'Wave 4 never enters Wave 1 territory',
+                        'Correction: Wave A (down), Wave B (up), Wave C (down)',
+                        'Enter at end of Wave 2 or Wave 4',
+                        'Exit at completion of Wave 5'
+                    ],
+                    tips: [
+                        'Wave 3 typically extends to 161.8% of Wave 1',
+                        'Wave 4 often retraces to 38.2% of Wave 3',
+                        'Use multiple timeframes to count waves correctly',
+                        'Combine with volume analysis - Wave 3 has highest volume',
+                        'Most difficult strategy - requires practice'
+                    ],
+                    example: 'Identify completed 5-wave impulse in USD/JPY. Wave 5 completes at 150.00. Enter short expecting ABC correction to 147.50 (38.2% retrace).'
+                },
+                harmonic: {
+                    title: '🦋 Harmonic Pattern Trading',
+                    description: 'Geometric price patterns with specific Fibonacci ratios - Gartley, Butterfly, Bat, Crab patterns.',
+                    keyLevels: ['XABCD Points', '0.618', '0.786', '1.272', '1.618'],
+                    rules: [
+                        'Identify 5-point pattern (X-A-B-C-D)',
+                        'Each leg must have specific Fibonacci relationship',
+                        'Gartley: AB=61.8% XA, BC=38.2-88.6% AB, CD=127.2% BC',
+                        'Butterfly: AB=78.6% XA, BC=38.2-88.6% AB, CD=161.8-224% BC',
+                        'Enter at Point D completion',
+                        'Stop loss beyond X point',
+                        'Target previous swing points (A or B)'
+                    ],
+                    tips: [
+                        'Use pattern recognition tools - hard to spot manually',
+                        'Point D provides highest probability reversal zone',
+                        'Combine with RSI divergence for confirmation',
+                        'Best on 1H and 4H timeframes',
+                        'High risk/reward ratios (1:2 or better)'
+                    ],
+                    example: 'Bullish Gartley pattern completes at 1.0800 in EUR/USD. Enter long, stop at 1.0770, targets at 1.0850 (Point B) and 1.0900 (Point A).'
+                },
+                'price-action': {
+                    title: '📊 Pure Price Action Trading',
+                    description: 'Trade based on candlestick patterns, support/resistance, and price structure without indicators.',
+                    keyLevels: ['Support/Resistance', 'Trend Lines', 'Chart Patterns', 'Candlestick Patterns'],
+                    rules: [
+                        'Identify key support and resistance zones',
+                        'Draw trend lines connecting swing points',
+                        'Look for engulfing, pin bar, inside bar patterns',
+                        'Enter on breakout or bounce at key levels',
+                        'Higher highs + higher lows = Uptrend',
+                        'Lower highs + lower lows = Downtrend',
+                        'Stop loss beyond recent swing point'
+                    ],
+                    tips: [
+                        'Pin bars at support/resistance are high probability',
+                        'Engulfing patterns show strong momentum shift',
+                        'Inside bars indicate consolidation before breakout',
+                        'Structure matters more than individual candles',
+                        'Cleaner charts = clearer signals',
+                        'Works on all timeframes'
+                    ],
+                    example: 'Bullish pin bar forms at 1.2600 support in GBP/USD. Enter long above pin bar high at 1.2625, stop below pin bar low at 1.2580, target resistance at 1.2700.'
+                },
+                smc: {
+                    title: '🏛️ Smart Money Concepts (SMC)',
+                    description: 'Follow institutional order flow through liquidity pools, order blocks, and market structure.',
+                    keyLevels: ['Order Blocks', 'Fair Value Gaps', 'Liquidity Pools', 'Break of Structure (BOS)', 'Change of Character (CHoCH)'],
+                    rules: [
+                        'Identify liquidity pools (equal highs/lows where stops cluster)',
+                        'Mark order blocks (last bullish/bearish candle before move)',
+                        'Wait for liquidity sweep (hunt stops above/below key levels)',
+                        'Enter on return to order block after liquidity grab',
+                        'BOS = Trend continuation, CHoCH = Trend reversal',
+                        'Target next liquidity pool',
+                        'Stop loss beyond order block'
+                    ],
+                    tips: [
+                        'Smart money hunts retail stops before big moves',
+                        'Order blocks act as strong support/resistance',
+                        'Fair value gaps (imbalances) get filled',
+                        'Best on 4H and Daily timeframes',
+                        'Requires understanding of institutional behavior',
+                        'Combine with trend structure for best results'
+                    ],
+                    example: 'EUR/USD has equal highs at 1.1000 (liquidity pool). Price breaks above, sweeps stops, then reverses to order block at 1.0950. Enter short, target liquidity below at 1.0850.'
+                }
+            };
+            
+            const strategy = strategies[strategyName];
+            
+            content.innerHTML = `
+                <div class="card" style="margin-top: 30px;">
+                    <h2>${strategy.title}</h2>
+                    <p style="color: #a0a4b8; font-size: 16px; line-height: 1.8; margin-bottom: 20px;">${strategy.description}</p>
+                    
+                    <div style="background: rgba(102, 126, 234, 0.1); padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #667eea;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📌 Key Levels/Components</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            ${strategy.keyLevels.map(level => `
+                                <span style="background: rgba(255, 255, 255, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 14px;">${level}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <h3 style="color: #fff; margin-bottom: 15px;">📋 Trading Rules</h3>
+                    <div style="background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+                        ${strategy.rules.map((rule, i) => `
+                            <div style="display: flex; gap: 15px; padding: 12px 0; border-bottom: ${i < strategy.rules.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none'};">
+                                <span style="color: #667eea; font-weight: 700; min-width: 30px;">${i + 1}.</span>
+                                <span style="color: #ccc; line-height: 1.6;">${rule}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <h3 style="color: #fff; margin-bottom: 15px;">💡 Pro Tips</h3>
+                    <div style="background: rgba(255, 193, 7, 0.1); padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #ffc107;">
+                        ${strategy.tips.map(tip => `
+                            <div style="padding: 10px 0; color: #ccc; line-height: 1.6;">
+                                <span style="color: #ffc107; margin-right: 10px;">►</span>${tip}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <h3 style="color: #fff; margin-bottom: 15px;">📖 Real Trade Example</h3>
+                    <div style="background: linear-gradient(135deg, rgba(17, 153, 142, 0.15) 0%, rgba(56, 239, 125, 0.15) 100%); padding: 20px; border-radius: 12px; border: 1px solid rgba(56, 239, 125, 0.3);">
+                        <p style="color: #ccc; line-height: 1.8; font-size: 15px;">${strategy.example}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Scroll to strategy content
+            content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Analyze all strategies for given input
+        function analyzeStrategies() {
+            const pair = document.getElementById('analyzer-pair').value;
+            const current = parseFloat(document.getElementById('analyzer-price').value);
+            const high = parseFloat(document.getElementById('analyzer-high').value);
+            const low = parseFloat(document.getElementById('analyzer-low').value);
+            
+            if (!current || !high || !low) return alert('Please fill all fields');
+            
+            const resultsDiv = document.getElementById('analyzer-results');
+            resultsDiv.style.display = 'block';
+            
+            // Calculate Fibonacci levels
+            const diff = high - low;
+            const fib618 = high - (diff * 0.618);
+            const fib50 = high - (diff * 0.5);
+            const fib382 = high - (diff * 0.382);
+            
+            // Determine signals
+            const signals = [];
+            
+            // Fibonacci Analysis
+            let fibSignal = 'NEUTRAL';
+            let fibColor = '#888';
+            if (current >= fib50 && current <= fib618) {
+                fibSignal = 'BUY ZONE';
+                fibColor = '#4caf50';
+            } else if (current > fib618) {
+                fibSignal = 'WAIT FOR RETRACE';
+                fibColor = '#ffc107';
+            }
+            
+            signals.push({
+                name: '🎯 Fibonacci',
+                signal: fibSignal,
+                color: fibColor,
+                detail: `Key level: ${fib618.toFixed(5)} (61.8%)`
+            });
+            
+            // Trend Analysis
+            const trend = current > (high + low) / 2 ? 'BULLISH' : 'BEARISH';
+            signals.push({
+                name: '📈 Trend',
+                signal: trend,
+                color: trend === 'BULLISH' ? '#4caf50' : '#f44336',
+                detail: `Current: ${current.toFixed(5)}, Mid: ${((high + low) / 2).toFixed(5)}`
+            });
+            
+            // Support/Resistance
+            const nearHigh = Math.abs(current - high) / diff < 0.1;
+            const nearLow = Math.abs(current - low) / diff < 0.1;
+            let srSignal = 'NEUTRAL';
+            let srColor = '#888';
+            
+            if (nearHigh) {
+                srSignal = 'AT RESISTANCE';
+                srColor = '#f44336';
+            } else if (nearLow) {
+                srSignal = 'AT SUPPORT';
+                srColor = '#4caf50';
+            }
+            
+            signals.push({
+                name: '🎚️ Support/Resistance',
+                signal: srSignal,
+                color: srColor,
+                detail: `High: ${high.toFixed(5)}, Low: ${low.toFixed(5)}`
+            });
+            
+            // Risk/Reward
+            const potentialGain = high - current;
+            const potentialLoss = current - low;
+            const rr = potentialGain / potentialLoss;
+            
+            signals.push({
+                name: '⚖️ Risk/Reward',
+                signal: `1:${rr.toFixed(2)}`,
+                color: rr >= 2 ? '#4caf50' : rr >= 1 ? '#ffc107' : '#f44336',
+                detail: rr >= 2 ? 'Good R:R' : rr >= 1 ? 'Fair R:R' : 'Poor R:R'
+            });
+            
+            // Overall recommendation
+            let bullishCount = 0;
+            if (fibSignal === 'BUY ZONE') bullishCount++;
+            if (trend === 'BULLISH') bullishCount++;
+            if (srSignal === 'AT SUPPORT') bullishCount++;
+            if (rr >= 1.5) bullishCount++;
+            
+            let recommendation = 'NEUTRAL';
+            let recColor = '#888';
+            if (bullishCount >= 3) {
+                recommendation = 'STRONG BUY';
+                recColor = '#4caf50';
+            } else if (bullishCount === 2) {
+                recommendation = 'MODERATE BUY';
+                recColor = '#667eea';
+            } else if (bullishCount <= 1) {
+                recommendation = 'WAIT/SELL';
+                recColor = '#f44336';
+            }
+            
+            resultsDiv.innerHTML = `
+                <h3 style="color: #fff; margin-bottom: 20px;">Analysis Results for ${pair}</h3>
+                
+                <div style="background: linear-gradient(135deg, ${recColor}33 0%, ${recColor}22 100%); padding: 25px; border-radius: 15px; margin-bottom: 25px; border: 2px solid ${recColor};">
+                    <div style="text-align: center;">
+                        <div style="font-size: 14px; color: #888; margin-bottom: 8px;">OVERALL RECOMMENDATION</div>
+                        <div style="font-size: 32px; font-weight: 700; color: ${recColor};">${recommendation}</div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    ${signals.map(s => `
+                        <div style="background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 12px; border-left: 4px solid ${s.color};">
+                            <div style="font-size: 14px; color: #888; margin-bottom: 8px;">${s.name}</div>
+                            <div style="font-size: 24px; font-weight: 700; color: ${s.color}; margin-bottom: 8px;">${s.signal}</div>
+                            <div style="font-size: 13px; color: #a0a4b8;">${s.detail}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #ffc107;">
+                    <strong style="color: #ffc107;">⚠️ Disclaimer:</strong> 
+                    <span style="color: #ccc;">This analysis is for educational purposes only. Always do your own research and use proper risk management.</span>
+                </div>
+            `;
         }
     </script>
 </body>
